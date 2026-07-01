@@ -1,0 +1,1634 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>小狐狸的慢旅信</title>
+  <style>
+    :root {
+      --paper: #fbf3e6;
+      --paper-2: #f4e6d1;
+      --ink: #51483e;
+      --muted: #837568;
+      --line: rgba(103, 82, 62, .2);
+      --card: rgba(255, 252, 246, .84);
+      --fox: #df8955;
+      --fox-deep: #be6c42;
+      --cream: #fff2df;
+      --leaf: #88a071;
+      --leaf-deep: #667d5d;
+      --sky: #a8c8c6;
+      --rose: #c47c78;
+      --gold: #d6a956;
+      --shadow: rgba(82, 62, 43, .15);
+    }
+
+    * { box-sizing: border-box; }
+
+    html,
+    body {
+      width: 100%;
+      min-height: 100%;
+      margin: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 18px;
+      color: var(--ink);
+      font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans SC", sans-serif;
+      background:
+        radial-gradient(circle at 12% 16%, rgba(255,255,255,.72) 0 1px, transparent 2px),
+        radial-gradient(circle at 84% 12%, rgba(168,200,198,.28), transparent 27%),
+        radial-gradient(circle at 12% 88%, rgba(223,137,85,.15), transparent 30%),
+        linear-gradient(135deg, #fffaf1, var(--paper) 58%, #edddc7);
+      background-size: 28px 28px, auto, auto, auto;
+      overflow: hidden;
+    }
+
+    button { font: inherit; }
+
+    .game {
+      position: relative;
+      width: min(100%, 930px);
+      min-height: min(780px, calc(100vh - 36px));
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      padding: clamp(18px, 4vw, 42px);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: linear-gradient(rgba(255,255,255,.45), rgba(255,255,255,.08)), var(--card);
+      box-shadow: 0 28px 80px var(--shadow);
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .game::before {
+      position: absolute;
+      content: "";
+      inset: 12px;
+      border: 1px dashed rgba(103, 82, 62, .2);
+      border-radius: 7px;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .game::after {
+      position: absolute;
+      content: "";
+      right: -88px;
+      top: -88px;
+      width: 225px;
+      height: 225px;
+      border-radius: 50%;
+      background: rgba(168,200,198,.22);
+      z-index: -1;
+    }
+
+    .topbar {
+      position: relative;
+      z-index: 3;
+      min-height: 46px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .title {
+      margin: 0;
+      font-size: clamp(18px, 3vw, 25px);
+      font-weight: 600;
+      letter-spacing: 0;
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .progress {
+      width: 116px;
+      height: 7px;
+      border-radius: 999px;
+      background: rgba(103,82,62,.12);
+      overflow: hidden;
+    }
+
+    .progress span {
+      display: block;
+      width: 0;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--leaf), var(--fox), var(--rose));
+      transition: width .65s ease;
+    }
+
+    .restart {
+      min-width: 42px;
+      min-height: 42px;
+      border: 0;
+      border-radius: 50%;
+      color: var(--ink);
+      background: rgba(255,255,255,.62);
+      box-shadow: inset 0 0 0 1px rgba(103,82,62,.2);
+      cursor: pointer;
+      transition: transform .18s ease, background-color .18s ease;
+    }
+
+    .restart:hover {
+      transform: rotate(-12deg) scale(1.04);
+      background: rgba(255,255,255,.92);
+    }
+
+    .scene {
+      position: relative;
+      display: none;
+      place-items: center;
+      min-height: 605px;
+      padding: 24px 0 18px;
+      opacity: 0;
+      transform: translateY(10px);
+    }
+
+    .scene.active {
+      display: grid;
+      animation: sceneIn .78s ease forwards;
+    }
+
+    @keyframes sceneIn {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .stage {
+      width: min(100%, 660px);
+      display: grid;
+      justify-items: center;
+      gap: 22px;
+      text-align: center;
+    }
+
+    .wide { width: min(100%, 760px); }
+
+    .copy {
+      display: grid;
+      justify-items: center;
+      gap: 10px;
+    }
+
+    .copy h2 {
+      margin: 0;
+      font-size: clamp(29px, 7vw, 48px);
+      line-height: 1.14;
+      font-weight: 600;
+      letter-spacing: 0;
+    }
+
+    .copy p {
+      max-width: 32em;
+      margin: 0;
+      color: var(--muted);
+      font-size: clamp(15px, 2.6vw, 18px);
+      line-height: 1.85;
+    }
+
+    .tiny {
+      color: rgba(81,72,62,.56);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .primary,
+    .quiet {
+      min-height: 46px;
+      padding: 0 24px;
+      border: 0;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: transform .18s ease, box-shadow .18s ease, background-color .18s ease, opacity .18s ease;
+    }
+
+    .primary {
+      min-width: 148px;
+      color: #fffaf4;
+      background: var(--rose);
+      box-shadow: 0 10px 20px rgba(196,124,120,.23);
+    }
+
+    .primary:hover:not(:disabled) {
+      transform: translateY(-2px);
+      background: #aa6464;
+      box-shadow: 0 14px 26px rgba(196,124,120,.27);
+    }
+
+    .quiet {
+      color: var(--ink);
+      background: rgba(255,255,255,.56);
+      box-shadow: inset 0 0 0 1px rgba(103,82,62,.2);
+    }
+
+    .quiet:hover:not(:disabled) {
+      transform: translateY(-1px);
+      background: rgba(255,255,255,.88);
+    }
+
+    button:disabled {
+      cursor: default;
+      opacity: .58;
+    }
+
+    button:focus-visible {
+      outline: 3px solid rgba(196,124,120,.34);
+      outline-offset: 3px;
+    }
+
+    .fox-wrap {
+      position: relative;
+      width: 230px;
+      height: 205px;
+      display: grid;
+      place-items: end center;
+    }
+
+    .fox {
+      position: relative;
+      width: 138px;
+      height: 150px;
+      animation: breathe 3s ease-in-out infinite;
+      filter: drop-shadow(0 12px 10px rgba(82,62,43,.08));
+    }
+
+    @keyframes breathe {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+
+    .fox-tail {
+      position: absolute;
+      left: -45px;
+      bottom: 28px;
+      width: 92px;
+      height: 54px;
+      border-radius: 58px 15px 58px 22px;
+      background: var(--fox);
+      transform: rotate(-18deg);
+    }
+
+    .fox-tail::after {
+      position: absolute;
+      content: "";
+      left: 0;
+      top: 8px;
+      width: 32px;
+      height: 34px;
+      border-radius: 50% 16px 50% 16px;
+      background: var(--cream);
+    }
+
+    .fox-body {
+      position: absolute;
+      left: 35px;
+      bottom: 0;
+      width: 72px;
+      height: 68px;
+      border-radius: 35px 35px 24px 24px;
+      background: var(--fox);
+    }
+
+    .fox-belly {
+      position: absolute;
+      left: 51px;
+      bottom: 4px;
+      width: 40px;
+      height: 43px;
+      border-radius: 50% 50% 22px 22px;
+      background: var(--cream);
+    }
+
+    .fox-head {
+      position: absolute;
+      left: 24px;
+      top: 20px;
+      width: 92px;
+      height: 82px;
+      border-radius: 44% 44% 48% 48%;
+      background: var(--fox);
+    }
+
+    .fox-ear {
+      position: absolute;
+      top: 0;
+      width: 42px;
+      height: 48px;
+      background: var(--fox-deep);
+      clip-path: polygon(50% 0, 100% 100%, 0 100%);
+    }
+
+    .fox-ear.left {
+      left: 21px;
+      transform: rotate(-19deg);
+    }
+
+    .fox-ear.right {
+      right: 20px;
+      transform: rotate(19deg);
+    }
+
+    .fox-ear::after {
+      position: absolute;
+      content: "";
+      left: 11px;
+      bottom: 7px;
+      width: 20px;
+      height: 24px;
+      background: #f5c2a5;
+      clip-path: polygon(50% 0, 100% 100%, 0 100%);
+    }
+
+    .fox-mask {
+      position: absolute;
+      left: 36px;
+      top: 58px;
+      width: 68px;
+      height: 40px;
+      border-radius: 0 0 40px 40px;
+      background: var(--cream);
+      clip-path: polygon(0 0, 50% 38%, 100% 0, 90% 100%, 10% 100%);
+    }
+
+    .fox-eye {
+      position: absolute;
+      top: 57px;
+      width: 8px;
+      height: 10px;
+      border-radius: 50%;
+      background: #46372d;
+      z-index: 2;
+    }
+
+    .fox-eye.left { left: 51px; }
+    .fox-eye.right { right: 51px; }
+
+    .fox-nose {
+      position: absolute;
+      left: 64px;
+      top: 78px;
+      width: 12px;
+      height: 9px;
+      border-radius: 50%;
+      background: #49382c;
+      z-index: 2;
+    }
+
+    .fox-cheek {
+      position: absolute;
+      top: 73px;
+      width: 18px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(196,124,120,.45);
+      z-index: 2;
+    }
+
+    .fox-cheek.left { left: 31px; }
+    .fox-cheek.right { right: 31px; }
+
+    .satchel {
+      position: absolute;
+      right: 14px;
+      bottom: 24px;
+      width: 43px;
+      height: 35px;
+      border-radius: 8px 8px 12px 12px;
+      background: #ad7d55;
+      box-shadow: inset 0 0 0 2px rgba(82,62,43,.14);
+    }
+
+    .satchel::before {
+      position: absolute;
+      content: "";
+      left: 9px;
+      top: -9px;
+      width: 22px;
+      height: 16px;
+      border: 3px solid #8e6849;
+      border-bottom: 0;
+      border-radius: 18px 18px 0 0;
+    }
+
+    .shadow {
+      width: 155px;
+      height: 20px;
+      border-radius: 50%;
+      background: rgba(82,62,43,.11);
+      animation: shadowPulse 3s ease-in-out infinite;
+    }
+
+    @keyframes shadowPulse {
+      0%, 100% { transform: scaleX(1); opacity: .13; }
+      50% { transform: scaleX(.86); opacity: .08; }
+    }
+
+    .illustration {
+      position: relative;
+      width: min(100%, 540px);
+      height: 210px;
+      overflow: hidden;
+    }
+
+    .ground {
+      position: absolute;
+      left: 50%;
+      bottom: 28px;
+      width: 430px;
+      height: 90px;
+      border-bottom: 3px dotted rgba(103,82,62,.28);
+      border-radius: 50%;
+      transform: translateX(-50%);
+    }
+
+    .plant {
+      position: absolute;
+      bottom: 42px;
+      width: 30px;
+      height: 38px;
+    }
+
+    .plant::before,
+    .plant::after {
+      position: absolute;
+      content: "";
+      bottom: 0;
+      width: 18px;
+      height: 28px;
+      border-radius: 18px 18px 0 18px;
+      background: var(--leaf);
+    }
+
+    .plant::before {
+      left: 2px;
+      transform: rotate(-28deg);
+    }
+
+    .plant::after {
+      right: 0;
+      transform: rotate(28deg);
+      background: #9cab7d;
+    }
+
+    .plant.one { left: 44px; }
+    .plant.two { right: 52px; transform: scale(.78); }
+
+    .mailbox {
+      position: absolute;
+      right: 42px;
+      bottom: 58px;
+      width: 74px;
+      height: 58px;
+      border-radius: 36px 36px 8px 8px;
+      background: #bd756f;
+      box-shadow: inset 0 -8px 0 rgba(82,62,43,.08);
+    }
+
+    .mailbox::before {
+      position: absolute;
+      content: "";
+      left: 13px;
+      top: 30px;
+      width: 48px;
+      height: 2px;
+      background: rgba(255,255,255,.45);
+    }
+
+    .mailbox::after {
+      position: absolute;
+      content: "";
+      left: 32px;
+      bottom: -42px;
+      width: 10px;
+      height: 42px;
+      border-radius: 5px;
+      background: #987251;
+    }
+
+    .star,
+    .leaf-dot {
+      position: absolute;
+      opacity: .75;
+    }
+
+    .star {
+      width: 16px;
+      height: 16px;
+      background: var(--gold);
+      clip-path: polygon(50% 0, 62% 36%, 100% 50%, 62% 64%, 50% 100%, 38% 64%, 0 50%, 38% 36%);
+      animation: twinkle 2.6s ease-in-out infinite;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { transform: scale(.86); opacity: .45; }
+      50% { transform: scale(1.08); opacity: .88; }
+    }
+
+    .leaf-dot {
+      width: 18px;
+      height: 10px;
+      border-radius: 18px 0 18px 0;
+      background: var(--leaf);
+      animation: floatLeaf 4.2s ease-in-out infinite;
+    }
+
+    @keyframes floatLeaf {
+      0%, 100% { transform: translateY(0) rotate(-10deg); }
+      50% { transform: translateY(-9px) rotate(12deg); }
+    }
+
+    .choice-grid,
+    .souvenir-grid,
+    .route-grid,
+    .stamp-grid {
+      width: min(100%, 700px);
+      display: grid;
+      gap: 12px;
+    }
+
+    .choice-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .souvenir-grid,
+    .route-grid,
+    .stamp-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+    .choice,
+    .route,
+    .stamp,
+    .souvenir {
+      min-height: 96px;
+      display: grid;
+      align-content: center;
+      justify-items: center;
+      gap: 8px;
+      padding: 15px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      color: var(--ink);
+      background: rgba(255,252,246,.66);
+      cursor: pointer;
+      transition: transform .18s ease, border-color .18s ease, background-color .18s ease;
+    }
+
+    .choice:hover,
+    .route:hover,
+    .stamp:hover,
+    .souvenir:hover {
+      transform: translateY(-2px);
+      background: rgba(255,252,246,.94);
+    }
+
+    .choice.selected,
+    .route.selected,
+    .stamp.selected,
+    .souvenir.revealed {
+      border-color: rgba(196,124,120,.58);
+      background: rgba(255,244,235,.94);
+    }
+
+    .choice span,
+    .route span,
+    .stamp span,
+    .souvenir p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.65;
+    }
+
+    .mini-icon {
+      position: relative;
+      width: 46px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      color: #fffaf4;
+      font-size: 22px;
+    }
+
+    .mini-icon::before {
+      position: absolute;
+      content: "";
+      inset: 3px 6px;
+      border-radius: 14px;
+      background: var(--leaf);
+      z-index: -1;
+    }
+
+    .box-scene,
+    .wait-card,
+    .postcard,
+    .letter {
+      width: min(100%, 470px);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255,250,242,.92);
+      box-shadow: 0 18px 45px rgba(82,62,43,.12);
+    }
+
+    .box-scene {
+      min-height: 245px;
+      position: relative;
+      overflow: hidden;
+      padding: 26px;
+    }
+
+    .lunchbox {
+      position: absolute;
+      left: 50%;
+      bottom: 32px;
+      width: 170px;
+      height: 86px;
+      border-radius: 20px;
+      background: #b9c797;
+      transform: translateX(-50%);
+      box-shadow: inset 0 -10px 0 rgba(82,62,43,.08);
+    }
+
+    .lunchbox::before {
+      position: absolute;
+      content: "";
+      left: 22px;
+      right: 22px;
+      top: 24px;
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.45);
+    }
+
+    .cloth {
+      position: absolute;
+      left: 50%;
+      bottom: 92px;
+      width: 125px;
+      height: 82px;
+      background:
+        linear-gradient(45deg, rgba(255,255,255,.35) 25%, transparent 25% 50%, rgba(255,255,255,.35) 50% 75%, transparent 75%),
+        #df9b7a;
+      background-size: 24px 24px;
+      clip-path: polygon(50% 0, 100% 45%, 78% 100%, 22% 100%, 0 45%);
+      transform: translateX(-50%);
+    }
+
+    .wait-card {
+      display: grid;
+      gap: 18px;
+      padding: 28px;
+      text-align: left;
+    }
+
+    .window {
+      position: relative;
+      width: 170px;
+      height: 118px;
+      margin: 0 auto;
+      border: 8px solid #d8b98f;
+      border-radius: 8px;
+      background: linear-gradient(#b7d1d0 0 58%, #e7d7b2 58% 100%);
+      overflow: hidden;
+    }
+
+    .window::before,
+    .window::after {
+      position: absolute;
+      content: "";
+      background: rgba(255,255,255,.55);
+    }
+
+    .window::before {
+      left: 50%;
+      top: 0;
+      width: 6px;
+      height: 100%;
+      transform: translateX(-50%);
+    }
+
+    .window::after {
+      left: 0;
+      top: 50%;
+      width: 100%;
+      height: 6px;
+      transform: translateY(-50%);
+    }
+
+    .wait-lines {
+      display: grid;
+      gap: 12px;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    .wait-lines p {
+      margin: 0;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity .6s ease, transform .6s ease;
+    }
+
+    .wait-lines p.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .travel-art {
+      position: relative;
+      width: min(100%, 650px);
+      height: 290px;
+      overflow: hidden;
+    }
+
+    .travel-art .fox-wrap {
+      position: absolute;
+      left: 50%;
+      bottom: 26px;
+      transform: translateX(-50%);
+      animation: walkAcross 6.5s ease-in-out infinite;
+    }
+
+    .travel-art .fox {
+      transform-origin: 50% 100%;
+      animation: walkBob .72s ease-in-out infinite;
+    }
+
+    @keyframes walkAcross {
+      0% { transform: translateX(-330px) translateY(16px) scale(.78); }
+      48% { transform: translateX(-16px) translateY(-34px) scale(.98); }
+      100% { transform: translateX(248px) translateY(14px) scale(.82); }
+    }
+
+    @keyframes walkBob {
+      0%, 100% { transform: rotate(-2deg) translateY(0); }
+      50% { transform: rotate(2deg) translateY(-6px); }
+    }
+
+    .cloud {
+      position: absolute;
+      width: 58px;
+      height: 21px;
+      border-radius: 22px;
+      background: rgba(255,255,255,.66);
+      animation: drift 8s linear infinite;
+    }
+
+    .cloud::before,
+    .cloud::after {
+      position: absolute;
+      content: "";
+      border-radius: 50%;
+      background: inherit;
+    }
+
+    .cloud::before {
+      left: 10px;
+      top: -12px;
+      width: 24px;
+      height: 24px;
+    }
+
+    .cloud::after {
+      right: 8px;
+      top: -8px;
+      width: 18px;
+      height: 18px;
+    }
+
+    .cloud.one { left: -80px; top: 44px; }
+    .cloud.two { left: -150px; top: 112px; animation-delay: -3.8s; transform: scale(.78); }
+    .cloud.three { left: -230px; top: 26px; animation-delay: -6s; transform: scale(.62); }
+
+    @keyframes drift {
+      to { translate: 780px 0; }
+    }
+
+    .dots::after {
+      display: inline-block;
+      content: "";
+      width: 1.4em;
+      text-align: left;
+      animation: dots 1.5s steps(4, end) infinite;
+    }
+
+    @keyframes dots {
+      0% { content: ""; }
+      25% { content: "。"; }
+      50% { content: "。。"; }
+      75%, 100% { content: "。。。"; }
+    }
+
+    .souvenir {
+      position: relative;
+      min-height: 178px;
+      overflow: hidden;
+      text-align: left;
+      justify-items: stretch;
+    }
+
+    .souvenir h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .cover {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      color: rgba(81,72,62,.66);
+      background: linear-gradient(135deg, rgba(255,250,242,.97), rgba(244,230,209,.94));
+      transition: opacity .36s ease, transform .36s ease;
+    }
+
+    .souvenir.revealed .cover {
+      opacity: 0;
+      transform: scale(1.04);
+      pointer-events: none;
+    }
+
+    .postcard {
+      min-height: 258px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      overflow: hidden;
+      text-align: left;
+    }
+
+    .postcard-art {
+      position: relative;
+      min-height: 258px;
+      background: linear-gradient(180deg, rgba(168,200,198,.88) 0 48%, rgba(229,216,180,.92) 48% 100%);
+    }
+
+    .sun {
+      position: absolute;
+      top: 34px;
+      right: 36px;
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: #efca78;
+      box-shadow: 0 0 0 12px rgba(239,202,120,.18);
+    }
+
+    .hill {
+      position: absolute;
+      left: -18px;
+      bottom: 34px;
+      width: 190px;
+      height: 96px;
+      border-radius: 50% 50% 0 0;
+      background: var(--leaf);
+    }
+
+    .hill.second {
+      left: 70px;
+      bottom: 20px;
+      width: 170px;
+      height: 76px;
+      background: #aab58a;
+    }
+
+    .postcard-note {
+      padding: 28px 24px;
+      display: grid;
+      align-content: center;
+      gap: 12px;
+      line-height: 1.8;
+      color: var(--muted);
+    }
+
+    .postcard-note strong {
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    .stamp b {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      color: #fffaf4;
+      font-weight: 500;
+      background: var(--rose);
+    }
+
+    .envelope {
+      position: relative;
+      width: min(100%, 410px);
+      height: 248px;
+      border: 1px solid rgba(103,82,62,.22);
+      border-radius: 8px;
+      background: #fff7e8;
+      box-shadow: 0 18px 45px rgba(82,62,43,.13);
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform .22s ease;
+    }
+
+    .envelope:hover { transform: translateY(-3px); }
+
+    .envelope::before,
+    .envelope::after {
+      position: absolute;
+      content: "";
+      inset: 0;
+      background: linear-gradient(145deg, transparent 49.5%, rgba(103,82,62,.16) 50%, transparent 50.5%);
+    }
+
+    .envelope::after {
+      background: linear-gradient(35deg, transparent 49.5%, rgba(103,82,62,.16) 50%, transparent 50.5%);
+    }
+
+    .flap {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 57%;
+      clip-path: polygon(0 0, 100% 0, 50% 100%);
+      background: #f7ead6;
+      transform-origin: top;
+      transition: transform .7s ease;
+      z-index: 2;
+    }
+
+    .envelope.open .flap { transform: rotateX(180deg); }
+
+    .seal {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 52px;
+      height: 52px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: #fffaf4;
+      background: var(--rose);
+      transform: translate(-50%, -45%);
+      box-shadow: 0 8px 16px rgba(196,124,120,.28);
+      z-index: 3;
+    }
+
+    .envelope.open .seal {
+      opacity: 0;
+      transition: opacity .25s ease;
+    }
+
+    .letter {
+      position: relative;
+      min-height: 420px;
+      padding: clamp(26px, 5vw, 40px);
+      text-align: left;
+      line-height: 1.92;
+      transform: rotate(-.6deg);
+    }
+
+    .letter::before {
+      position: absolute;
+      content: "";
+      left: 24px;
+      right: 24px;
+      top: 20px;
+      height: 1px;
+      background: rgba(103,82,62,.18);
+    }
+
+    .letter p {
+      margin: 0 0 13px;
+      color: var(--ink);
+      font-size: clamp(16px, 2.8vw, 18px);
+    }
+
+    .letter strong {
+      color: #aa6464;
+      font-weight: 600;
+    }
+
+    .signature {
+      margin-top: 18px;
+      text-align: right;
+      color: var(--muted);
+    }
+
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .footer {
+      position: relative;
+      z-index: 3;
+      min-height: 24px;
+      display: grid;
+      place-items: center;
+      color: rgba(81,72,62,.52);
+      font-size: 13px;
+      text-align: center;
+    }
+
+    @media (max-width: 700px) {
+      body {
+        padding: 10px;
+        overflow: auto;
+      }
+
+      .game {
+        min-height: calc(100vh - 20px);
+        padding: 18px 14px;
+      }
+
+      .game::before { inset: 8px; }
+
+      .scene { min-height: 590px; }
+
+      .topbar {
+        grid-template-columns: 1fr;
+        justify-items: center;
+        text-align: center;
+      }
+
+      .controls {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .choice-grid,
+      .souvenir-grid,
+      .route-grid,
+      .stamp-grid,
+      .postcard {
+        grid-template-columns: 1fr;
+      }
+
+      .souvenir { min-height: 142px; }
+      .postcard-art { min-height: 170px; }
+      .travel-art { height: 245px; }
+      .travel-art .fox-wrap { animation-name: walkAcrossSmall; }
+      .mailbox { right: 20px; transform: scale(.8); transform-origin: bottom right; }
+    }
+
+    @keyframes walkAcrossSmall {
+      0% { transform: translateX(-224px) translateY(16px) scale(.74); }
+      48% { transform: translateX(-18px) translateY(-30px) scale(.9); }
+      100% { transform: translateX(138px) translateY(14px) scale(.78); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="game" aria-live="polite">
+    <header class="topbar">
+      <h1 class="title">小狐狸的慢旅信</h1>
+      <div class="controls">
+        <div class="progress" aria-label="旅程进度"><span id="progressBar"></span></div>
+        <button class="restart" type="button" aria-label="重新开始" title="重新开始">↺</button>
+      </div>
+    </header>
+
+    <section class="scene active" data-scene="start">
+      <div class="stage">
+        <div class="illustration" aria-hidden="true">
+          <div class="star" style="left: 85px; top: 42px;"></div>
+          <div class="leaf-dot" style="right: 120px; top: 72px;"></div>
+          <div class="ground"></div>
+          <div class="plant one"></div>
+          <div class="plant two"></div>
+          <div class="mailbox"></div>
+          <div class="fox-wrap" style="margin: 0 auto;">
+            <div class="fox">
+              <div class="fox-tail"></div>
+              <div class="fox-body"></div>
+              <div class="fox-belly"></div>
+              <div class="fox-ear left"></div>
+              <div class="fox-ear right"></div>
+              <div class="fox-head"></div>
+              <div class="fox-mask"></div>
+              <div class="fox-eye left"></div>
+              <div class="fox-eye right"></div>
+              <div class="fox-nose"></div>
+              <div class="fox-cheek left"></div>
+              <div class="fox-cheek right"></div>
+              <div class="satchel"></div>
+            </div>
+            <div class="shadow"></div>
+          </div>
+        </div>
+        <div class="copy">
+          <h2>门口有一封委托</h2>
+          <p>小狐狸今天要去远处走走。它不急着出发，只先把地图摊开，听一听风从哪里来。</p>
+        </div>
+        <button class="primary" type="button" data-next>看看委托</button>
+      </div>
+    </section>
+
+    <section class="scene" data-scene="pack">
+      <div class="stage wide">
+        <div class="copy">
+          <h2>准备行囊</h2>
+          <p>出门前要带便当和护身物。小狐狸也想选三样轻轻的东西，放进今天的包袱里。</p>
+        </div>
+        <div class="box-scene" aria-hidden="true">
+          <div class="cloth"></div>
+          <div class="lunchbox"></div>
+          <div class="leaf-dot" style="left: 72px; top: 58px;"></div>
+          <div class="star" style="right: 84px; top: 48px;"></div>
+        </div>
+        <div class="choice-grid" id="packGrid">
+          <button class="choice" type="button" data-pack>
+            <span class="mini-icon">饭</span>
+            温热饭团
+            <span>走到傍晚也不会饿。</span>
+          </button>
+          <button class="choice" type="button" data-pack>
+            <span class="mini-icon">叶</span>
+            四叶小签
+            <span>放在口袋里，路会更顺。</span>
+          </button>
+          <button class="choice" type="button" data-pack>
+            <span class="mini-icon">灯</span>
+            小小灯芯
+            <span>天暗时，照一点点路。</span>
+          </button>
+          <button class="choice" type="button" data-pack>
+            <span class="mini-icon">茶</span>
+            暖茶包
+            <span>停下来时，给心里添热气。</span>
+          </button>
+        </div>
+        <button class="primary" type="button" id="packNext" disabled>系好包袱</button>
+        <div class="tiny" id="packHint">还需要选择三样。</div>
+      </div>
+    </section>
+
+    <section class="scene" data-scene="wait">
+      <div class="stage">
+        <div class="copy">
+          <h2>等它出门</h2>
+          <p>小狐狸不会立刻回来。你可以像等一张明信片那样，陪这个房间安静一会儿。</p>
+        </div>
+        <div class="wait-card">
+          <div class="window" aria-hidden="true">
+            <div class="sun"></div>
+            <div class="hill"></div>
+          </div>
+          <div class="wait-lines" id="waitLines">
+            <p>窗外的云慢慢挪过屋檐。</p>
+            <p>包袱放在门边，叶子轻轻晃了一下。</p>
+            <p>小狐狸回头点点头，像是在说：我会带点好东西回来。</p>
+          </div>
+        </div>
+        <button class="primary" type="button" id="waitNext" disabled>送到门口</button>
+        <div class="tiny" id="waitHint">请陪它安静一小会儿。</div>
+      </div>
+    </section>
+
+    <section class="scene" data-scene="route">
+      <div class="stage wide">
+        <div class="copy">
+          <h2>选择今日路线</h2>
+          <p>它可能走过溪边、车站，或一小片星光。不同的路会寄回不同的风景。</p>
+        </div>
+        <div class="route-grid">
+          <button class="route" type="button" data-route="溪边小路">
+            <span class="mini-icon">溪</span>
+            溪边小路
+            <span>会遇见湿润的石头和很轻的水声。</span>
+          </button>
+          <button class="route" type="button" data-route="黄昏车站">
+            <span class="mini-icon">站</span>
+            黄昏车站
+            <span>会听见远处的列车把晚风带来。</span>
+          </button>
+          <button class="route" type="button" data-route="星星山坡">
+            <span class="mini-icon">星</span>
+            星星山坡
+            <span>会在草地上捡到一点夜色。</span>
+          </button>
+        </div>
+        <button class="primary" type="button" id="routeNext" disabled>让它出发</button>
+      </div>
+    </section>
+
+    <section class="scene" data-scene="travel">
+      <div class="stage">
+        <div class="travel-art" aria-hidden="true">
+          <div class="cloud one"></div>
+          <div class="cloud two"></div>
+          <div class="cloud three"></div>
+          <div class="ground"></div>
+          <div class="plant one"></div>
+          <div class="plant two"></div>
+          <div class="star" style="left: 44%; top: 42px;"></div>
+          <div class="fox-wrap">
+            <div class="fox">
+              <div class="fox-tail"></div>
+              <div class="fox-body"></div>
+              <div class="fox-belly"></div>
+              <div class="fox-ear left"></div>
+              <div class="fox-ear right"></div>
+              <div class="fox-head"></div>
+              <div class="fox-mask"></div>
+              <div class="fox-eye left"></div>
+              <div class="fox-eye right"></div>
+              <div class="fox-nose"></div>
+              <div class="fox-cheek left"></div>
+              <div class="fox-cheek right"></div>
+              <div class="satchel"></div>
+            </div>
+            <div class="shadow"></div>
+          </div>
+        </div>
+        <div class="copy">
+          <h2 class="dots">小狐狸旅行中</h2>
+          <p id="travelText">它把脚步放得很轻，像怕惊动路边刚醒来的草。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="scene" data-scene="souvenir">
+      <div class="stage wide">
+        <div class="copy">
+          <h2>翻看带回的小物</h2>
+          <p>旅行回来的包袱里，总有一些看似普通、却被好好收着的东西。</p>
+        </div>
+        <div class="souvenir-grid" id="souvenirGrid">
+          <button class="souvenir" type="button" data-souvenir>
+            <h3>压平的叶子</h3>
+            <p>叶脉细细的，像一张很小的地图。</p>
+            <span class="cover">打开小纸包</span>
+          </button>
+          <button class="souvenir" type="button" data-souvenir>
+            <h3>圆圆的车票</h3>
+            <p>边角有一点旧，像保存过一阵温柔的等待。</p>
+            <span class="cover">打开小纸包</span>
+          </button>
+          <button class="souvenir" type="button" data-souvenir>
+            <h3>星光玻璃珠</h3>
+            <p>拿近看时，里面有一粒很安静的亮。</p>
+            <span class="cover">打开小纸包</span>
+          </button>
+        </div>
+        <button class="primary" type="button" id="souvenirNext" disabled>收进行囊册</button>
+        <div class="tiny" id="souvenirHint">还差三件小物。</div>
+      </div>
+    </section>
+
+    <section class="scene" data-scene="postcard">
+      <div class="stage">
+        <div class="copy">
+          <h2>收到一张明信片</h2>
+          <p>没有写很多字，只有路上的风景和一句短短的留言。</p>
+        </div>
+        <article class="postcard">
+          <div class="postcard-art" aria-hidden="true">
+            <div class="sun"></div>
+            <div class="hill"></div>
+            <div class="hill second"></div>
+            <div class="plant one"></div>
+          </div>
+          <div class="postcard-note">
+            <strong>旅途中：</strong>
+            <span id="postcardText">这里的风很轻。小狐狸说，它把一路看到的好天气都收好了。</span>
+          </div>
+        </article>
+        <button class="primary" type="button" data-next>夹进册子里</button>
+      </div>
+    </section>
+
+    <section class="scene" data-scene="stamp">
+      <div class="stage wide">
+        <div class="copy">
+          <h2>给信封盖章</h2>
+          <p>最后一封信已经放好。选一枚印章，小狐狸就会把它郑重交给你。</p>
+        </div>
+        <div class="stamp-grid">
+          <button class="stamp" type="button" data-stamp="平安">
+            <b>安</b>
+            平安
+            <span>愿一切慢慢稳下来。</span>
+          </button>
+          <button class="stamp" type="button" data-stamp="晴朗">
+            <b>晴</b>
+            晴朗
+            <span>愿心里常有一点光。</span>
+          </button>
+          <button class="stamp" type="button" data-stamp="自由">
+            <b>风</b>
+            自由
+            <span>愿脚步总能去想去的地方。</span>
+          </button>
+        </div>
+        <button class="primary" type="button" id="stampNext" disabled>盖好印章</button>
+      </div>
+    </section>
+
+    <section class="scene" data-scene="return">
+      <div class="stage">
+        <div class="illustration" aria-hidden="true">
+          <div class="ground"></div>
+          <div class="mailbox"></div>
+          <div class="star" style="left: 96px; top: 44px;"></div>
+          <div class="leaf-dot" style="right: 122px; top: 74px;"></div>
+          <div class="fox-wrap" style="margin: 0 auto;">
+            <div class="fox">
+              <div class="fox-tail"></div>
+              <div class="fox-body"></div>
+              <div class="fox-belly"></div>
+              <div class="fox-ear left"></div>
+              <div class="fox-ear right"></div>
+              <div class="fox-head"></div>
+              <div class="fox-mask"></div>
+              <div class="fox-eye left"></div>
+              <div class="fox-eye right"></div>
+              <div class="fox-nose"></div>
+              <div class="fox-cheek left"></div>
+              <div class="fox-cheek right"></div>
+              <div class="satchel"></div>
+            </div>
+            <div class="shadow"></div>
+          </div>
+        </div>
+        <div class="copy">
+          <h2>它回来了</h2>
+          <p id="returnText">包袱比出发时轻了一点，信却变得很满。它站在门口，等你接过来。</p>
+        </div>
+        <button class="primary" type="button" data-next>接过信</button>
+      </div>
+    </section>
+
+    <section class="scene" data-scene="envelope">
+      <div class="stage">
+        <div class="copy">
+          <h2>一封安静的信</h2>
+          <p>到这里才可以拆开。小狐狸把爪印按在信封角落，像是认真完成了委托。</p>
+        </div>
+        <button class="envelope" type="button" id="envelope" aria-label="打开信封">
+          <span class="flap"></span>
+          <span class="seal" id="sealText">爪</span>
+        </button>
+        <button class="primary" type="button" id="envelopeNext" disabled>读这封信</button>
+      </div>
+    </section>
+
+    <section class="scene" data-scene="final">
+      <div class="stage">
+        <article class="letter">
+          <p>亲爱的你：</p>
+          <p>生日快乐。</p>
+          <p>小狐狸走过了<span id="chosenRoute">一条温柔的路</span>，带回压平的叶子、圆圆的车票和一粒星光玻璃珠。它说，这些小东西都不吵闹，却都认真地发着光。</p>
+          <p>我想把这句话也放进信里：愿你新的一岁，不必一直很厉害，也可以被温柔接住；不必总是赶路，也能在喜欢的风景前多停一会儿。</p>
+          <p>愿你睡得安稳，笑得轻松。愿那些真正珍惜你的人，看得见你的辛苦，也记得给你偏爱和回应。</p>
+          <p><strong>谢谢你来到这个世界。也谢谢你一直成为你自己。</strong></p>
+          <p class="signature" id="chosenStamp">盖章：小狐狸的爪印</p>
+        </article>
+        <div class="buttons">
+          <button class="primary" type="button" data-restart>再旅行一次</button>
+          <button class="quiet" type="button" id="slowAgain">从拆信前开始</button>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer" id="footerText">慢慢来，路会自己展开。</footer>
+  </main>
+
+  <script>
+    const scenes = Array.from(document.querySelectorAll(".scene"));
+    const progressBar = document.getElementById("progressBar");
+    const nextButtons = document.querySelectorAll("[data-next]");
+    const restartButtons = document.querySelectorAll(".restart, [data-restart]");
+    const packButtons = Array.from(document.querySelectorAll("[data-pack]"));
+    const packNext = document.getElementById("packNext");
+    const packHint = document.getElementById("packHint");
+    const waitLines = Array.from(document.querySelectorAll("#waitLines p"));
+    const waitNext = document.getElementById("waitNext");
+    const waitHint = document.getElementById("waitHint");
+    const routeButtons = Array.from(document.querySelectorAll("[data-route]"));
+    const routeNext = document.getElementById("routeNext");
+    const travelText = document.getElementById("travelText");
+    const souvenirButtons = Array.from(document.querySelectorAll("[data-souvenir]"));
+    const souvenirNext = document.getElementById("souvenirNext");
+    const souvenirHint = document.getElementById("souvenirHint");
+    const postcardText = document.getElementById("postcardText");
+    const stampButtons = Array.from(document.querySelectorAll("[data-stamp]"));
+    const stampNext = document.getElementById("stampNext");
+    const returnText = document.getElementById("returnText");
+    const envelope = document.getElementById("envelope");
+    const envelopeNext = document.getElementById("envelopeNext");
+    const sealText = document.getElementById("sealText");
+    const chosenRoute = document.getElementById("chosenRoute");
+    const chosenStamp = document.getElementById("chosenStamp");
+    const slowAgain = document.getElementById("slowAgain");
+    const footerText = document.getElementById("footerText");
+
+    const state = {
+      scene: 0,
+      route: "",
+      stamp: "",
+      timers: []
+    };
+
+    const routeNotes = {
+      "溪边小路": "它沿着溪边走，水声很轻，石头上有刚晒干的阳光。",
+      "黄昏车站": "它在黄昏车站停下，听见远处的列车把晚风慢慢带来。",
+      "星星山坡": "它爬上星星山坡，把一点夜色和一粒亮光放进口袋。"
+    };
+
+    const postcardNotes = {
+      "溪边小路": "溪边的石头被太阳晒得暖暖的。小狐狸说，今天的水声很适合保存。",
+      "黄昏车站": "车站的灯一盏一盏亮起来。小狐狸说，等待也可以是温柔的。",
+      "星星山坡": "山坡上的草很软。小狐狸说，它捡到一粒不会熄灭的小星光。"
+    };
+
+    const stampNotes = {
+      "平安": "盖章：愿你平安，许多事都慢慢稳下来。",
+      "晴朗": "盖章：愿你晴朗，心里常有一点光。",
+      "自由": "盖章：愿你自由，脚步能去想去的地方。"
+    };
+
+    const footerLines = {
+      start: "慢慢来，路会自己展开。",
+      pack: "包袱不用太满，刚刚好就能出门。",
+      wait: "等待也是旅行的一部分。",
+      route: "今天的路，由你轻轻选定。",
+      travel: "它正在远处，替这封信看风景。",
+      souvenir: "小小的东西，也会记得一路的风。",
+      postcard: "远方先寄回一点安静。",
+      stamp: "印章很小，心意很认真。",
+      return: "它回来了，带着不能提前说的信。",
+      envelope: "有些话，要留到最后才打开。",
+      final: "生日快乐，今天的你请被好好祝福。"
+    };
+
+    function clearTimers() {
+      state.timers.forEach((timer) => window.clearTimeout(timer));
+      state.timers = [];
+    }
+
+    function setLater(callback, delay) {
+      const timer = window.setTimeout(callback, delay);
+      state.timers.push(timer);
+    }
+
+    function showScene(index) {
+      clearTimers();
+      state.scene = index;
+      scenes.forEach((scene, sceneIndex) => {
+        scene.classList.toggle("active", sceneIndex === index);
+      });
+      progressBar.style.width = `${Math.round((index / (scenes.length - 1)) * 100)}%`;
+      runSceneSetup(scenes[index].dataset.scene);
+    }
+
+    function runSceneSetup(name) {
+      if (name === "wait") {
+        waitNext.disabled = true;
+        waitHint.textContent = "请陪它安静一小会儿。";
+        waitLines.forEach((line) => line.classList.remove("show"));
+        waitLines.forEach((line, index) => {
+          setLater(() => line.classList.add("show"), 650 + index * 1350);
+        });
+        setLater(() => {
+          waitNext.disabled = false;
+          waitHint.textContent = "它准备好出门了。";
+        }, 5200);
+      }
+
+      if (name === "travel") {
+        travelText.textContent = routeNotes[state.route] || "它把脚步放得很轻，像怕惊动路边刚醒来的草。";
+        setLater(() => showScene(state.scene + 1), 7200);
+      }
+
+      if (name === "postcard") {
+        postcardText.textContent = postcardNotes[state.route] || "这里的风很轻。小狐狸说，它把一路看到的好天气都收好了。";
+      }
+
+      if (name === "return") {
+        returnText.textContent = state.stamp
+          ? `包袱比出发时轻了一点，信却变得很满。那枚“${state.stamp}”印章，也已经好好盖上了。`
+          : "包袱比出发时轻了一点，信却变得很满。它站在门口，等你接过来。";
+      }
+
+      if (name === "envelope") {
+        envelope.classList.remove("open");
+        envelopeNext.disabled = true;
+      }
+
+      if (name === "final") {
+        chosenRoute.textContent = state.route || "一条温柔的路";
+        chosenStamp.textContent = stampNotes[state.stamp] || "盖章：小狐狸的爪印";
+      }
+
+      footerText.textContent = footerLines[name] || footerLines.start;
+    }
+
+    function resetGame() {
+      packButtons.forEach((button) => button.classList.remove("selected"));
+      routeButtons.forEach((button) => button.classList.remove("selected"));
+      stampButtons.forEach((button) => button.classList.remove("selected"));
+      souvenirButtons.forEach((button) => button.classList.remove("revealed"));
+      packNext.disabled = true;
+      routeNext.disabled = true;
+      stampNext.disabled = true;
+      souvenirNext.disabled = true;
+      packHint.textContent = "还需要选择三样。";
+      souvenirHint.textContent = "还差三件小物。";
+      sealText.textContent = "爪";
+      state.route = "";
+      state.stamp = "";
+      showScene(0);
+    }
+
+    nextButtons.forEach((button) => {
+      button.addEventListener("click", () => showScene(state.scene + 1));
+    });
+
+    restartButtons.forEach((button) => {
+      button.addEventListener("click", resetGame);
+    });
+
+    packButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const selected = packButtons.filter((item) => item.classList.contains("selected"));
+        if (!button.classList.contains("selected") && selected.length >= 3) return;
+        button.classList.toggle("selected");
+        const count = packButtons.filter((item) => item.classList.contains("selected")).length;
+        packNext.disabled = count !== 3;
+        packHint.textContent = count === 3 ? "行囊准备好了。" : `还需要选择${3 - count}样。`;
+      });
+    });
+
+    packNext.addEventListener("click", () => showScene(state.scene + 1));
+    waitNext.addEventListener("click", () => showScene(state.scene + 1));
+
+    routeButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        routeButtons.forEach((item) => item.classList.remove("selected"));
+        button.classList.add("selected");
+        state.route = button.dataset.route;
+        routeNext.disabled = false;
+      });
+    });
+
+    routeNext.addEventListener("click", () => showScene(state.scene + 1));
+
+    souvenirButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        button.classList.add("revealed");
+        const count = souvenirButtons.filter((item) => item.classList.contains("revealed")).length;
+        souvenirNext.disabled = count !== souvenirButtons.length;
+        souvenirHint.textContent = count === souvenirButtons.length ? "小物都收好了。" : `还差${souvenirButtons.length - count}件小物。`;
+      });
+    });
+
+    souvenirNext.addEventListener("click", () => showScene(state.scene + 1));
+
+    stampButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        stampButtons.forEach((item) => item.classList.remove("selected"));
+        button.classList.add("selected");
+        state.stamp = button.dataset.stamp;
+        sealText.textContent = button.querySelector("b").textContent;
+        stampNext.disabled = false;
+      });
+    });
+
+    stampNext.addEventListener("click", () => showScene(state.scene + 1));
+
+    envelope.addEventListener("click", () => {
+      envelope.classList.add("open");
+      setLater(() => {
+        envelopeNext.disabled = false;
+      }, 700);
+    });
+
+    envelopeNext.addEventListener("click", () => showScene(state.scene + 1));
+
+    slowAgain.addEventListener("click", () => {
+      showScene(scenes.findIndex((scene) => scene.dataset.scene === "envelope"));
+    });
+  </script>
+</body>
+</html>
