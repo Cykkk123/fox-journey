@@ -7,13 +7,13 @@
   <style>
     :root {
       --paper: #fbf3e6;
-      --paper-2: #f4e6d1;
+      --paper-2: #f2e2cc;
       --ink: #51483e;
-      --muted: #837568;
+      --muted: #817365;
       --line: rgba(103, 82, 62, .2);
-      --card: rgba(255, 252, 246, .84);
+      --card: rgba(255, 252, 246, .86);
       --fox: #df8955;
-      --fox-deep: #be6c42;
+      --fox-deep: #bd6d43;
       --cream: #fff2df;
       --leaf: #88a071;
       --leaf-deep: #667d5d;
@@ -39,8 +39,10 @@
       padding: 18px;
       color: var(--ink);
       font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans SC", sans-serif;
+      line-break: loose;
+      text-rendering: optimizeLegibility;
       background:
-        radial-gradient(circle at 12% 16%, rgba(255,255,255,.72) 0 1px, transparent 2px),
+        radial-gradient(circle at 12% 16%, rgba(255,255,255,.7) 0 1px, transparent 2px),
         radial-gradient(circle at 84% 12%, rgba(168,200,198,.28), transparent 27%),
         radial-gradient(circle at 12% 88%, rgba(223,137,85,.15), transparent 30%),
         linear-gradient(135deg, #fffaf1, var(--paper) 58%, #edddc7);
@@ -50,10 +52,32 @@
 
     button { font: inherit; }
 
+    h1,
+    h2,
+    h3,
+    button {
+      text-wrap: balance;
+      word-break: keep-all;
+      overflow-wrap: normal;
+    }
+
+    p,
+    span,
+    .tiny,
+    .footer,
+    .wait-lines,
+    .postcard-note,
+    .paper-note,
+    .letter {
+      text-wrap: pretty;
+      word-break: auto-phrase;
+      overflow-wrap: normal;
+    }
+
     .game {
       position: relative;
-      width: min(100%, 930px);
-      min-height: min(780px, calc(100vh - 36px));
+      width: min(100%, 960px);
+      min-height: min(790px, calc(100vh - 36px));
       display: grid;
       grid-template-rows: auto 1fr auto;
       padding: clamp(18px, 4vw, 42px);
@@ -102,6 +126,7 @@
       font-size: clamp(18px, 3vw, 25px);
       font-weight: 600;
       letter-spacing: 0;
+      line-height: 1.35;
     }
 
     .controls {
@@ -148,7 +173,7 @@
       position: relative;
       display: none;
       place-items: center;
-      min-height: 605px;
+      min-height: 610px;
       padding: 24px 0 18px;
       opacity: 0;
       transform: translateY(10px);
@@ -164,14 +189,14 @@
     }
 
     .stage {
-      width: min(100%, 660px);
+      width: min(100%, 680px);
       display: grid;
       justify-items: center;
       gap: 22px;
       text-align: center;
     }
 
-    .wide { width: min(100%, 760px); }
+    .wide { width: min(100%, 820px); }
 
     .copy {
       display: grid;
@@ -185,14 +210,16 @@
       line-height: 1.14;
       font-weight: 600;
       letter-spacing: 0;
+      max-width: 11em;
     }
 
     .copy p {
-      max-width: 32em;
+      max-width: 34em;
       margin: 0;
       color: var(--muted);
       font-size: clamp(15px, 2.6vw, 18px);
       line-height: 1.85;
+      text-align: center;
     }
 
     .tiny {
@@ -208,6 +235,7 @@
       border: 0;
       border-radius: 999px;
       cursor: pointer;
+      line-height: 1.35;
       transition: transform .18s ease, box-shadow .18s ease, background-color .18s ease, opacity .18s ease;
     }
 
@@ -434,8 +462,8 @@
 
     .illustration {
       position: relative;
-      width: min(100%, 540px);
-      height: 210px;
+      width: min(100%, 560px);
+      height: 218px;
       overflow: hidden;
     }
 
@@ -443,7 +471,7 @@
       position: absolute;
       left: 50%;
       bottom: 28px;
-      width: 430px;
+      width: 450px;
       height: 90px;
       border-bottom: 3px dotted rgba(103,82,62,.28);
       border-radius: 50%;
@@ -549,22 +577,31 @@
     .choice-grid,
     .souvenir-grid,
     .route-grid,
-    .stamp-grid {
-      width: min(100%, 700px);
+    .stamp-grid,
+    .note-grid,
+    .map-grid,
+    .mail-grid {
+      width: min(100%, 760px);
       display: grid;
       gap: 12px;
     }
 
-    .choice-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .choice-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
     .souvenir-grid,
     .route-grid,
     .stamp-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .note-grid,
+    .mail-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .map-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 
     .choice,
     .route,
     .stamp,
-    .souvenir {
-      min-height: 96px;
+    .souvenir,
+    .note-card,
+    .map-piece,
+    .mail-piece {
+      min-height: 104px;
       display: grid;
       align-content: center;
       justify-items: center;
@@ -575,13 +612,17 @@
       color: var(--ink);
       background: rgba(255,252,246,.66);
       cursor: pointer;
+      line-height: 1.45;
       transition: transform .18s ease, border-color .18s ease, background-color .18s ease;
     }
 
     .choice:hover,
     .route:hover,
     .stamp:hover,
-    .souvenir:hover {
+    .souvenir:hover,
+    .note-card:hover,
+    .map-piece:hover,
+    .mail-piece:hover {
       transform: translateY(-2px);
       background: rgba(255,252,246,.94);
     }
@@ -589,7 +630,10 @@
     .choice.selected,
     .route.selected,
     .stamp.selected,
-    .souvenir.revealed {
+    .souvenir.revealed,
+    .note-card.revealed,
+    .map-piece.done,
+    .mail-piece.done {
       border-color: rgba(196,124,120,.58);
       background: rgba(255,244,235,.94);
     }
@@ -597,37 +641,194 @@
     .choice span,
     .route span,
     .stamp span,
-    .souvenir p {
+    .souvenir p,
+    .note-card p,
+    .map-piece span,
+    .mail-piece span {
       margin: 0;
       color: var(--muted);
       font-size: 13px;
       line-height: 1.65;
+      max-width: 18em;
     }
 
-    .mini-icon {
+    .pack-picture {
       position: relative;
-      width: 46px;
-      height: 38px;
-      display: grid;
-      place-items: center;
-      color: #fffaf4;
-      font-size: 22px;
+      width: 58px;
+      height: 48px;
     }
 
-    .mini-icon::before {
+    .pack-picture::before,
+    .pack-picture::after {
       position: absolute;
       content: "";
-      inset: 3px 6px;
-      border-radius: 14px;
+    }
+
+    .pic-rice::before {
+      left: 8px;
+      bottom: 6px;
+      width: 42px;
+      height: 30px;
+      border-radius: 50% 50% 14px 14px;
+      background: #fff8ec;
+      box-shadow: inset 0 -6px 0 rgba(214,169,86,.22);
+    }
+
+    .pic-rice::after {
+      left: 22px;
+      bottom: 10px;
+      width: 15px;
+      height: 13px;
+      border-radius: 4px;
+      background: #4f5f45;
+    }
+
+    .pic-clover::before {
+      left: 9px;
+      top: 7px;
+      width: 17px;
+      height: 17px;
+      border-radius: 50% 50% 50% 0;
       background: var(--leaf);
-      z-index: -1;
+      box-shadow: 18px 0 0 var(--leaf), 9px 17px 0 var(--leaf), 27px 17px 0 var(--leaf);
+      transform: rotate(-45deg);
+    }
+
+    .pic-clover::after {
+      left: 28px;
+      top: 30px;
+      width: 4px;
+      height: 18px;
+      border-radius: 4px;
+      background: var(--leaf-deep);
+      transform: rotate(22deg);
+    }
+
+    .pic-lamp::before {
+      left: 18px;
+      top: 5px;
+      width: 24px;
+      height: 32px;
+      border-radius: 50% 50% 12px 12px;
+      background: #f0c75f;
+      box-shadow: 0 0 0 8px rgba(240,199,95,.17);
+    }
+
+    .pic-lamp::after {
+      left: 16px;
+      bottom: 4px;
+      width: 28px;
+      height: 8px;
+      border-radius: 999px;
+      background: #8e6849;
+    }
+
+    .pic-tea::before {
+      left: 12px;
+      bottom: 5px;
+      width: 34px;
+      height: 26px;
+      border: 2px solid rgba(103,82,62,.28);
+      border-radius: 0 0 16px 16px;
+      background: #fff6e7;
+    }
+
+    .pic-tea::after {
+      left: 21px;
+      top: 2px;
+      width: 4px;
+      height: 22px;
+      border-left: 2px solid rgba(103,82,62,.38);
+      border-radius: 50%;
+      box-shadow: 12px 0 0 rgba(103,82,62,.18);
+    }
+
+    .pic-paper::before {
+      left: 12px;
+      top: 6px;
+      width: 36px;
+      height: 32px;
+      border: 1px solid rgba(103,82,62,.22);
+      border-radius: 5px;
+      background: #fffaf2;
+      transform: rotate(-5deg);
+    }
+
+    .pic-paper::after {
+      left: 19px;
+      top: 17px;
+      width: 23px;
+      height: 2px;
+      border-radius: 999px;
+      background: rgba(103,82,62,.2);
+      box-shadow: 0 8px 0 rgba(103,82,62,.16);
+    }
+
+    .pic-bell::before {
+      left: 15px;
+      top: 9px;
+      width: 30px;
+      height: 30px;
+      border-radius: 18px 18px 10px 10px;
+      background: #d6a956;
+    }
+
+    .pic-bell::after {
+      left: 24px;
+      bottom: 5px;
+      width: 12px;
+      height: 8px;
+      border-radius: 50%;
+      background: #9d7448;
+      box-shadow: 0 -28px 0 -3px #9d7448;
+    }
+
+    .pic-flower::before {
+      left: 20px;
+      top: 7px;
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      background: #c47c78;
+      box-shadow: 13px 6px 0 #c47c78, -11px 8px 0 #d99a97, 2px 18px 0 #d99a97;
+    }
+
+    .pic-flower::after {
+      left: 29px;
+      top: 28px;
+      width: 4px;
+      height: 18px;
+      border-radius: 4px;
+      background: var(--leaf-deep);
+    }
+
+    .pic-shell::before {
+      left: 14px;
+      top: 9px;
+      width: 34px;
+      height: 30px;
+      border-radius: 50% 50% 12px 12px;
+      background: #f1c4a1;
+      clip-path: polygon(50% 0, 100% 45%, 82% 100%, 18% 100%, 0 45%);
+    }
+
+    .pic-shell::after {
+      left: 30px;
+      top: 14px;
+      width: 2px;
+      height: 25px;
+      background: rgba(103,82,62,.18);
+      box-shadow: -9px 4px 0 rgba(103,82,62,.16), 9px 4px 0 rgba(103,82,62,.16);
     }
 
     .box-scene,
+    .map-board,
+    .mail-scene,
     .wait-card,
     .postcard,
-    .letter {
-      width: min(100%, 470px);
+    .letter,
+    .note-board {
+      width: min(100%, 500px);
       border: 1px solid var(--line);
       border-radius: 8px;
       background: rgba(255,250,242,.92);
@@ -676,6 +877,126 @@
       background-size: 24px 24px;
       clip-path: polygon(50% 0, 100% 45%, 78% 100%, 22% 100%, 0 45%);
       transform: translateX(-50%);
+    }
+
+    .packed-preview {
+      position: absolute;
+      left: 50%;
+      bottom: 122px;
+      width: 250px;
+      min-height: 54px;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      transform: translateX(-50%);
+    }
+
+    .packed-token {
+      width: 48px;
+      height: 42px;
+      border: 1px solid rgba(103,82,62,.16);
+      border-radius: 14px;
+      background: rgba(255,252,246,.9);
+      display: grid;
+      place-items: center;
+      animation: tokenIn .28s ease forwards;
+    }
+
+    .map-board,
+    .mail-scene {
+      position: relative;
+      min-height: 230px;
+      overflow: hidden;
+      padding: 26px;
+    }
+
+    .map-board::before {
+      position: absolute;
+      content: "";
+      left: 50%;
+      top: 28px;
+      width: 300px;
+      height: 158px;
+      border: 1px solid rgba(103,82,62,.18);
+      border-radius: 8px;
+      background:
+        linear-gradient(90deg, transparent 49%, rgba(103,82,62,.1) 49% 51%, transparent 51%),
+        linear-gradient(0deg, transparent 49%, rgba(103,82,62,.1) 49% 51%, transparent 51%),
+        #fff8eb;
+      transform: translateX(-50%) rotate(-1deg);
+      box-shadow: 0 12px 24px rgba(82,62,43,.08);
+    }
+
+    .map-trail {
+      position: absolute;
+      left: 50%;
+      top: 88px;
+      width: 230px;
+      height: 70px;
+      border-bottom: 3px dotted rgba(103,82,62,.32);
+      border-radius: 50%;
+      transform: translateX(-50%) rotate(-7deg);
+    }
+
+    .map-pin {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      border-radius: 50% 50% 50% 0;
+      background: var(--rose);
+      transform: rotate(-45deg);
+      opacity: .85;
+    }
+
+    .map-pin.one { left: calc(50% - 116px); top: 116px; }
+    .map-pin.two { left: calc(50% - 10px); top: 74px; background: var(--leaf); }
+    .map-pin.three { left: calc(50% + 92px); top: 122px; background: var(--gold); }
+
+    .map-piece,
+    .mail-piece {
+      min-height: 122px;
+    }
+
+    .map-piece b,
+    .mail-piece b {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      color: #fffaf4;
+      background: var(--leaf);
+      font-weight: 500;
+    }
+
+    .mail-scene::before {
+      position: absolute;
+      content: "";
+      left: 50%;
+      bottom: 36px;
+      width: 190px;
+      height: 108px;
+      border-radius: 48px 48px 10px 10px;
+      background: #bd756f;
+      transform: translateX(-50%);
+      box-shadow: inset 0 -10px 0 rgba(82,62,43,.08);
+    }
+
+    .mail-scene::after {
+      position: absolute;
+      content: "";
+      left: 50%;
+      bottom: 91px;
+      width: 122px;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.55);
+      transform: translateX(-50%);
+    }
+
+    @keyframes tokenIn {
+      from { opacity: 0; transform: translateY(8px) scale(.94); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
     }
 
     .wait-card {
@@ -740,7 +1061,7 @@
 
     .travel-art {
       position: relative;
-      width: min(100%, 650px);
+      width: min(100%, 680px);
       height: 290px;
       overflow: hidden;
     }
@@ -750,7 +1071,7 @@
       left: 50%;
       bottom: 26px;
       transform: translateX(-50%);
-      animation: walkAcross 6.5s ease-in-out infinite;
+      animation: walkAcross 7.2s ease-in-out infinite;
     }
 
     .travel-art .fox {
@@ -759,9 +1080,9 @@
     }
 
     @keyframes walkAcross {
-      0% { transform: translateX(-330px) translateY(16px) scale(.78); }
+      0% { transform: translateX(-350px) translateY(16px) scale(.78); }
       48% { transform: translateX(-16px) translateY(-34px) scale(.98); }
-      100% { transform: translateX(248px) translateY(14px) scale(.82); }
+      100% { transform: translateX(268px) translateY(14px) scale(.82); }
     }
 
     @keyframes walkBob {
@@ -805,7 +1126,7 @@
     .cloud.three { left: -230px; top: 26px; animation-delay: -6s; transform: scale(.62); }
 
     @keyframes drift {
-      to { translate: 780px 0; }
+      to { translate: 820px 0; }
     }
 
     .dots::after {
@@ -823,20 +1144,83 @@
       75%, 100% { content: "。。。"; }
     }
 
-    .souvenir {
+    .note-board {
       position: relative;
-      min-height: 178px;
+      min-height: 250px;
+      padding: 28px;
+      overflow: hidden;
+    }
+
+    .note-board::before {
+      position: absolute;
+      content: "";
+      left: 38px;
+      right: 38px;
+      top: 34px;
+      height: 2px;
+      background: rgba(103,82,62,.13);
+      box-shadow: 0 42px 0 rgba(103,82,62,.1), 0 84px 0 rgba(103,82,62,.08);
+    }
+
+    .paper-note {
+      position: relative;
+      width: min(100%, 320px);
+      min-height: 152px;
+      margin: 8px auto 0;
+      padding: 26px 24px;
+      border: 1px solid rgba(103,82,62,.18);
+      border-radius: 6px;
+      background: #fffaf2;
+      box-shadow: 0 12px 24px rgba(82,62,43,.1);
+      transform: rotate(-1deg);
+      line-height: 1.85;
+      color: var(--muted);
+      text-align: left;
+    }
+
+    .paper-note::before {
+      position: absolute;
+      content: "";
+      right: 26px;
+      bottom: 49px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      color: transparent;
+      background: rgba(196,124,120,.95);
+      box-shadow:
+        -12px 4px 0 rgba(196,124,120,.95),
+        12px 4px 0 rgba(196,124,120,.95),
+        0 -10px 0 rgba(196,124,120,.95);
+    }
+
+    .paper-note::after {
+      position: absolute;
+      content: "";
+      right: 20px;
+      bottom: 18px;
+      width: 34px;
+      height: 27px;
+      border-radius: 50% 50% 45% 45%;
+      background: var(--rose);
+    }
+
+    .note-card {
+      min-height: 150px;
+      position: relative;
       overflow: hidden;
       text-align: left;
       justify-items: stretch;
     }
 
+    .note-card h3,
     .souvenir h3 {
       margin: 0 0 8px;
       font-size: 18px;
       font-weight: 600;
     }
 
+    .note-cover,
     .cover {
       position: absolute;
       inset: 0;
@@ -848,14 +1232,23 @@
       transition: opacity .36s ease, transform .36s ease;
     }
 
+    .note-card.revealed .note-cover,
     .souvenir.revealed .cover {
       opacity: 0;
       transform: scale(1.04);
       pointer-events: none;
     }
 
+    .souvenir {
+      position: relative;
+      min-height: 178px;
+      overflow: hidden;
+      text-align: left;
+      justify-items: stretch;
+    }
+
     .postcard {
-      min-height: 258px;
+      min-height: 268px;
       display: grid;
       grid-template-columns: 1fr 1fr;
       overflow: hidden;
@@ -864,7 +1257,7 @@
 
     .postcard-art {
       position: relative;
-      min-height: 258px;
+      min-height: 268px;
       background: linear-gradient(180deg, rgba(168,200,198,.88) 0 48%, rgba(229,216,180,.92) 48% 100%);
     }
 
@@ -980,6 +1373,36 @@
       z-index: 3;
     }
 
+    .paw-mark {
+      position: relative;
+      width: 31px;
+      height: 30px;
+      display: block;
+    }
+
+    .paw-mark::before {
+      position: absolute;
+      content: "";
+      left: 9px;
+      bottom: 2px;
+      width: 15px;
+      height: 13px;
+      border-radius: 50% 50% 45% 45%;
+      background: #fffaf4;
+    }
+
+    .paw-mark::after {
+      position: absolute;
+      content: "";
+      left: 11px;
+      top: 2px;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #fffaf4;
+      box-shadow: -10px 5px 0 #fffaf4, 10px 5px 0 #fffaf4, 0 10px 0 #fffaf4;
+    }
+
     .envelope.open .seal {
       opacity: 0;
       transition: opacity .25s ease;
@@ -987,7 +1410,7 @@
 
     .letter {
       position: relative;
-      min-height: 420px;
+      min-height: 430px;
       padding: clamp(26px, 5vw, 40px);
       text-align: left;
       line-height: 1.92;
@@ -1039,25 +1462,55 @@
       text-align: center;
     }
 
-    @media (max-width: 700px) {
+    @media (max-width: 760px) {
       body {
-        padding: 10px;
+        padding: 8px;
         overflow: auto;
       }
 
       .game {
-        min-height: calc(100vh - 20px);
-        padding: 18px 14px;
+        min-height: calc(100vh - 16px);
+        padding: 18px 16px;
       }
 
       .game::before { inset: 8px; }
+      .scene {
+        min-height: 620px;
+        padding-top: 20px;
+      }
 
-      .scene { min-height: 590px; }
+      .stage,
+      .wide {
+        width: min(100%, 390px);
+        gap: 20px;
+      }
 
       .topbar {
         grid-template-columns: 1fr;
         justify-items: center;
         text-align: center;
+        gap: 10px;
+      }
+
+      .title {
+        max-width: 11em;
+        font-size: 20px;
+      }
+
+      .copy {
+        width: 100%;
+      }
+
+      .copy h2 {
+        max-width: 8.8em;
+        font-size: clamp(28px, 8vw, 36px);
+        line-height: 1.18;
+      }
+
+      .copy p {
+        max-width: 19em;
+        font-size: 16px;
+        line-height: 1.78;
       }
 
       .controls {
@@ -1065,12 +1518,91 @@
         justify-content: center;
       }
 
+      .progress {
+        width: 104px;
+      }
+
+      .primary,
+      .quiet {
+        max-width: 100%;
+        min-height: 44px;
+        padding: 0 22px;
+        white-space: normal;
+      }
+
       .choice-grid,
       .souvenir-grid,
       .route-grid,
       .stamp-grid,
+      .note-grid,
+      .map-grid,
+      .mail-grid,
       .postcard {
         grid-template-columns: 1fr;
+        width: min(100%, 350px);
+      }
+
+      .choice,
+      .route,
+      .stamp,
+      .souvenir,
+      .note-card,
+      .map-piece,
+      .mail-piece {
+        min-height: 112px;
+        padding: 16px 18px;
+      }
+
+      .choice span,
+      .route span,
+      .stamp span,
+      .souvenir p,
+      .note-card p,
+      .map-piece span,
+      .mail-piece span {
+        max-width: 20em;
+        font-size: 13px;
+        line-height: 1.7;
+      }
+
+      .box-scene,
+      .map-board,
+      .mail-scene,
+      .wait-card,
+      .postcard,
+      .letter,
+      .note-board {
+        width: min(100%, 350px);
+      }
+
+      .wait-card,
+      .note-board {
+        padding: 24px 22px;
+      }
+
+      .wait-lines {
+        line-height: 1.78;
+      }
+
+      .paper-note {
+        width: min(100%, 286px);
+        line-height: 1.78;
+      }
+
+      .postcard-note {
+        padding: 24px 22px;
+        line-height: 1.78;
+      }
+
+      .letter {
+        padding: 30px 24px;
+        line-height: 1.82;
+      }
+
+      .letter p {
+        font-size: 16px;
+        line-height: 1.82;
+        margin-bottom: 12px;
       }
 
       .souvenir { min-height: 142px; }
@@ -1078,6 +1610,7 @@
       .travel-art { height: 245px; }
       .travel-art .fox-wrap { animation-name: walkAcrossSmall; }
       .mailbox { right: 20px; transform: scale(.8); transform-origin: bottom right; }
+      .packed-preview { width: 220px; }
     }
 
     @keyframes walkAcrossSmall {
@@ -1148,34 +1681,55 @@
       <div class="stage wide">
         <div class="copy">
           <h2>准备行囊</h2>
-          <p>出门前要带便当和护身物。小狐狸也想选三样轻轻的东西，放进今天的包袱里。</p>
+          <p>从八样东西里选三样。不同的行囊，会让小狐狸遇见不同的小事，也会改变它最后带回来的话。</p>
         </div>
         <div class="box-scene" aria-hidden="true">
           <div class="cloth"></div>
+          <div class="packed-preview" id="packedPreview"></div>
           <div class="lunchbox"></div>
           <div class="leaf-dot" style="left: 72px; top: 58px;"></div>
           <div class="star" style="right: 84px; top: 48px;"></div>
         </div>
         <div class="choice-grid" id="packGrid">
-          <button class="choice" type="button" data-pack>
-            <span class="mini-icon">饭</span>
+          <button class="choice" type="button" data-pack="rice">
+            <span class="pack-picture pic-rice"></span>
             温热饭团
-            <span>走到傍晚也不会饿。</span>
+            <span>软软的，适合放在花布里。</span>
           </button>
-          <button class="choice" type="button" data-pack>
-            <span class="mini-icon">叶</span>
+          <button class="choice" type="button" data-pack="clover">
+            <span class="pack-picture pic-clover"></span>
             四叶小签
-            <span>放在口袋里，路会更顺。</span>
+            <span>薄薄一片，像刚好遇见的好运。</span>
           </button>
-          <button class="choice" type="button" data-pack>
-            <span class="mini-icon">灯</span>
+          <button class="choice" type="button" data-pack="lamp">
+            <span class="pack-picture pic-lamp"></span>
             小小灯芯
-            <span>天暗时，照一点点路。</span>
+            <span>不太亮，但能守住一点夜色。</span>
           </button>
-          <button class="choice" type="button" data-pack>
-            <span class="mini-icon">茶</span>
+          <button class="choice" type="button" data-pack="tea">
+            <span class="pack-picture pic-tea"></span>
             暖茶包
-            <span>停下来时，给心里添热气。</span>
+            <span>闻起来很安静，像一小口热气。</span>
+          </button>
+          <button class="choice" type="button" data-pack="paper">
+            <span class="pack-picture pic-paper"></span>
+            空白便笺
+            <span>干干净净，等着路上的一句话。</span>
+          </button>
+          <button class="choice" type="button" data-pack="bell">
+            <span class="pack-picture pic-bell"></span>
+            小铃铛
+            <span>轻轻一晃，像风在很远处回答。</span>
+          </button>
+          <button class="choice" type="button" data-pack="flower">
+            <span class="pack-picture pic-flower"></span>
+            干花书签
+            <span>夹在地图里，像把春天折了一页。</span>
+          </button>
+          <button class="choice" type="button" data-pack="shell">
+            <span class="pack-picture pic-shell"></span>
+            贝壳护符
+            <span>贴近耳边时，好像藏着远处水声。</span>
           </button>
         </div>
         <button class="primary" type="button" id="packNext" disabled>系好包袱</button>
@@ -1196,8 +1750,8 @@
           </div>
           <div class="wait-lines" id="waitLines">
             <p>窗外的云慢慢挪过屋檐。</p>
-            <p>包袱放在门边，叶子轻轻晃了一下。</p>
-            <p>小狐狸回头点点头，像是在说：我会带点好东西回来。</p>
+            <p id="waitBranchOne">包袱放在门边，小狐狸认真检查了一遍。</p>
+            <p id="waitBranchTwo">它回头点点头，像是在说：我会带点好东西回来。</p>
           </div>
         </div>
         <button class="primary" type="button" id="waitNext" disabled>送到门口</button>
@@ -1213,22 +1767,56 @@
         </div>
         <div class="route-grid">
           <button class="route" type="button" data-route="溪边小路">
-            <span class="mini-icon">溪</span>
+            <span class="pack-picture pic-shell"></span>
             溪边小路
             <span>会遇见湿润的石头和很轻的水声。</span>
           </button>
           <button class="route" type="button" data-route="黄昏车站">
-            <span class="mini-icon">站</span>
+            <span class="pack-picture pic-paper"></span>
             黄昏车站
             <span>会听见远处的列车把晚风带来。</span>
           </button>
           <button class="route" type="button" data-route="星星山坡">
-            <span class="mini-icon">星</span>
+            <span class="pack-picture pic-lamp"></span>
             星星山坡
             <span>会在草地上捡到一点夜色。</span>
           </button>
         </div>
         <button class="primary" type="button" id="routeNext" disabled>让它出发</button>
+      </div>
+    </section>
+
+    <section class="scene" data-scene="map">
+      <div class="stage wide">
+        <div class="copy">
+          <h2>把地图拼好</h2>
+          <p>出发前，地图还缺三枚小标记。把它们轻轻按上去，路就会慢慢露出来。</p>
+        </div>
+        <div class="map-board" aria-hidden="true">
+          <div class="map-trail"></div>
+          <div class="map-pin one"></div>
+          <div class="map-pin two"></div>
+          <div class="map-pin three"></div>
+        </div>
+        <div class="map-grid">
+          <button class="map-piece" type="button" data-map>
+            <b>一</b>
+            起点标记
+            <span>贴在门口，提醒它回家的方向。</span>
+          </button>
+          <button class="map-piece" type="button" data-map>
+            <b>二</b>
+            风向标记
+            <span>贴在中途，听一听今天的风。</span>
+          </button>
+          <button class="map-piece" type="button" data-map>
+            <b>三</b>
+            归程标记
+            <span>贴在终点，让信不会迷路。</span>
+          </button>
+        </div>
+        <button class="primary" type="button" id="mapNext" disabled>收起地图</button>
+        <div class="tiny" id="mapHint">还差三枚标记。</div>
       </div>
     </section>
 
@@ -1268,29 +1856,66 @@
       </div>
     </section>
 
+    <section class="scene" data-scene="note">
+      <div class="stage wide">
+        <div class="copy">
+          <h2>途中寄来字条</h2>
+          <p>邮差把两张小纸片放进信箱。点开看看，小狐狸在远处写了什么。</p>
+        </div>
+        <div class="note-board" aria-hidden="true">
+          <div class="paper-note" id="paperNote">字条上还盖着小小的爪印，像是刚从风里寄回来。</div>
+        </div>
+        <div class="note-grid" id="noteGrid">
+          <button class="note-card" type="button" data-note="one">
+            <h3>第一张字条</h3>
+            <p id="noteOne">小狐狸在路边停下，写了一句很短的话。</p>
+            <span class="note-cover">拆开字条</span>
+          </button>
+          <button class="note-card" type="button" data-note="two">
+            <h3>第二张字条</h3>
+            <p id="noteTwo">另一张纸角有一点点雨痕。</p>
+            <span class="note-cover">拆开字条</span>
+          </button>
+        </div>
+        <button class="primary" type="button" id="noteNext" disabled>收进信箱</button>
+        <div class="tiny" id="noteHint">还差两张字条。</div>
+      </div>
+    </section>
+
+    <section class="scene" data-scene="mailbox">
+      <div class="stage wide">
+        <div class="copy">
+          <h2>整理信箱</h2>
+          <p>小狐狸寄来的纸片有点乱。把信箱里的小碎片收好，后面的明信片才会完整。</p>
+        </div>
+        <div class="mail-scene" aria-hidden="true">
+          <div class="star" style="left: 28%; top: 56px;"></div>
+          <div class="leaf-dot" style="right: 31%; top: 72px;"></div>
+        </div>
+        <div class="mail-grid">
+          <button class="mail-piece" type="button" data-mail>
+            <b>邮</b>
+            小邮戳
+            <span>边缘有一点点红色。</span>
+          </button>
+          <button class="mail-piece" type="button" data-mail>
+            <b>角</b>
+            明信片角
+            <span>摸起来像被风吹过。</span>
+          </button>
+        </div>
+        <button class="primary" type="button" id="mailNext" disabled>放回信箱</button>
+        <div class="tiny" id="mailHint">还差两片。</div>
+      </div>
+    </section>
+
     <section class="scene" data-scene="souvenir">
       <div class="stage wide">
         <div class="copy">
           <h2>翻看带回的小物</h2>
-          <p>旅行回来的包袱里，总有一些看似普通、却被好好收着的东西。</p>
+          <p>小物会根据你放进包袱的东西变化。它们看似普通，却都被小狐狸好好收着。</p>
         </div>
-        <div class="souvenir-grid" id="souvenirGrid">
-          <button class="souvenir" type="button" data-souvenir>
-            <h3>压平的叶子</h3>
-            <p>叶脉细细的，像一张很小的地图。</p>
-            <span class="cover">打开小纸包</span>
-          </button>
-          <button class="souvenir" type="button" data-souvenir>
-            <h3>圆圆的车票</h3>
-            <p>边角有一点旧，像保存过一阵温柔的等待。</p>
-            <span class="cover">打开小纸包</span>
-          </button>
-          <button class="souvenir" type="button" data-souvenir>
-            <h3>星光玻璃珠</h3>
-            <p>拿近看时，里面有一粒很安静的亮。</p>
-            <span class="cover">打开小纸包</span>
-          </button>
-        </div>
+        <div class="souvenir-grid" id="souvenirGrid"></div>
         <button class="primary" type="button" id="souvenirNext" disabled>收进行囊册</button>
         <div class="tiny" id="souvenirHint">还差三件小物。</div>
       </div>
@@ -1310,7 +1935,7 @@
             <div class="plant one"></div>
           </div>
           <div class="postcard-note">
-            <strong>旅途中：</strong>
+            <strong id="postcardTitle">旅途中：</strong>
             <span id="postcardText">这里的风很轻。小狐狸说，它把一路看到的好天气都收好了。</span>
           </div>
         </article>
@@ -1387,7 +2012,7 @@
         </div>
         <button class="envelope" type="button" id="envelope" aria-label="打开信封">
           <span class="flap"></span>
-          <span class="seal" id="sealText">爪</span>
+          <span class="seal" id="sealText"><span class="paw-mark"></span></span>
         </button>
         <button class="primary" type="button" id="envelopeNext" disabled>读这封信</button>
       </div>
@@ -1396,13 +2021,13 @@
     <section class="scene" data-scene="final">
       <div class="stage">
         <article class="letter">
-          <p>亲爱的你：</p>
+          <p>亲爱的王圣淇：</p>
           <p>生日快乐。</p>
-          <p>小狐狸走过了<span id="chosenRoute">一条温柔的路</span>，带回压平的叶子、圆圆的车票和一粒星光玻璃珠。它说，这些小东西都不吵闹，却都认真地发着光。</p>
-          <p>我想把这句话也放进信里：愿你新的一岁，不必一直很厉害，也可以被温柔接住；不必总是赶路，也能在喜欢的风景前多停一会儿。</p>
+          <p>小狐狸走过了<span id="chosenRoute">一条温柔的路</span>，带回了<span id="souvenirSummary">几件安静发光的小物</span>。它说，这些小东西都不吵闹，却都认真地保存着一路的风。</p>
+          <p id="branchBlessing">我想把这句话也放进信里：愿你新的一岁，不必一直很厉害，也可以被温柔接住。</p>
           <p>愿你睡得安稳，笑得轻松。愿那些真正珍惜你的人，看得见你的辛苦，也记得给你偏爱和回应。</p>
           <p><strong>谢谢你来到这个世界。也谢谢你一直成为你自己。</strong></p>
-          <p class="signature" id="chosenStamp">盖章：小狐狸的爪印</p>
+          <p class="signature" id="chosenStamp">信封角落有一枚小狐狸脚印。</p>
         </article>
         <div class="buttons">
           <button class="primary" type="button" data-restart>再旅行一次</button>
@@ -1422,15 +2047,31 @@
     const packButtons = Array.from(document.querySelectorAll("[data-pack]"));
     const packNext = document.getElementById("packNext");
     const packHint = document.getElementById("packHint");
+    const packedPreview = document.getElementById("packedPreview");
     const waitLines = Array.from(document.querySelectorAll("#waitLines p"));
     const waitNext = document.getElementById("waitNext");
     const waitHint = document.getElementById("waitHint");
+    const waitBranchOne = document.getElementById("waitBranchOne");
+    const waitBranchTwo = document.getElementById("waitBranchTwo");
     const routeButtons = Array.from(document.querySelectorAll("[data-route]"));
     const routeNext = document.getElementById("routeNext");
+    const mapButtons = Array.from(document.querySelectorAll("[data-map]"));
+    const mapNext = document.getElementById("mapNext");
+    const mapHint = document.getElementById("mapHint");
     const travelText = document.getElementById("travelText");
-    const souvenirButtons = Array.from(document.querySelectorAll("[data-souvenir]"));
+    const noteButtons = Array.from(document.querySelectorAll("[data-note]"));
+    const noteNext = document.getElementById("noteNext");
+    const noteHint = document.getElementById("noteHint");
+    const noteOne = document.getElementById("noteOne");
+    const noteTwo = document.getElementById("noteTwo");
+    const paperNote = document.getElementById("paperNote");
+    const mailButtons = Array.from(document.querySelectorAll("[data-mail]"));
+    const mailNext = document.getElementById("mailNext");
+    const mailHint = document.getElementById("mailHint");
+    const souvenirGrid = document.getElementById("souvenirGrid");
     const souvenirNext = document.getElementById("souvenirNext");
     const souvenirHint = document.getElementById("souvenirHint");
+    const postcardTitle = document.getElementById("postcardTitle");
     const postcardText = document.getElementById("postcardText");
     const stampButtons = Array.from(document.querySelectorAll("[data-stamp]"));
     const stampNext = document.getElementById("stampNext");
@@ -1440,14 +2081,76 @@
     const sealText = document.getElementById("sealText");
     const chosenRoute = document.getElementById("chosenRoute");
     const chosenStamp = document.getElementById("chosenStamp");
+    const souvenirSummary = document.getElementById("souvenirSummary");
+    const branchBlessing = document.getElementById("branchBlessing");
     const slowAgain = document.getElementById("slowAgain");
     const footerText = document.getElementById("footerText");
 
-    const state = {
-      scene: 0,
-      route: "",
-      stamp: "",
-      timers: []
+    const packData = {
+      rice: {
+        icon: "pic-rice",
+        name: "温热饭团",
+        wait: "饭团被包在花布里，像一颗小小的太阳。",
+        note: "它在树荫下吃了半个饭团，把剩下的温热留给傍晚。",
+        souvenir: ["饭团竹叶", "竹叶上有一点米香，像午后被认真保存过。"],
+        blessing: "愿你新的一岁，身边总有能让你安心吃饭、慢慢休息的地方。"
+      },
+      clover: {
+        icon: "pic-clover",
+        name: "四叶小签",
+        wait: "四叶小签露出一个角，轻轻贴着地图。",
+        note: "它说今天没有迷路，可能是四叶小签悄悄指了方向。",
+        souvenir: ["叶影地图", "叶子的影子落在纸上，像一条刚好通向远方的小路。"],
+        blessing: "愿你常常遇见顺路的风，也遇见不用解释就懂你的人。"
+      },
+      lamp: {
+        icon: "pic-lamp",
+        name: "小小灯芯",
+        wait: "灯芯被放在最上面，像一颗还没亮起的星。",
+        note: "夜色来的时候，灯芯亮了一下，照见草叶上的露水。",
+        souvenir: ["灯芯玻璃", "玻璃里有一点很小的光，靠近看才会发现。"],
+        blessing: "愿你在天暗的时候，也记得自己心里一直有光。"
+      },
+      tea: {
+        icon: "pic-tea",
+        name: "暖茶包",
+        wait: "暖茶包贴着包袱边，闻起来有一点点甜。",
+        note: "雨停在小棚边，它泡了一杯茶，等云慢慢散开。",
+        souvenir: ["雨棚茶签", "茶签上有浅浅的雨痕，摸起来像一段安静的等待。"],
+        blessing: "愿疲惫的时候，总有人替你把世界的声音放轻一点。"
+      },
+      paper: {
+        icon: "pic-paper",
+        name: "空白便笺",
+        wait: "空白便笺被压得平平整整，等着路上的第一句话。",
+        note: "它把看见的风景写在纸上，只写很少，却写得很认真。",
+        souvenir: ["折角便笺", "纸角被风吹弯了，里面夹着一行很轻的字。"],
+        blessing: "愿你心里那些没说完的话，都能在合适的时候被温柔听见。"
+      },
+      bell: {
+        icon: "pic-bell",
+        name: "小铃铛",
+        wait: "小铃铛没有响，只在包袱里轻轻睡着。",
+        note: "风穿过山口时，铃铛响了一声，像远处有人说：别急。",
+        souvenir: ["风铃铜片", "铜片上有细小的划痕，晃一晃就像有风经过。"],
+        blessing: "愿你往前走的时候，总能听见来自生活深处的温柔回声。"
+      },
+      flower: {
+        icon: "pic-flower",
+        name: "干花书签",
+        wait: "干花书签夹在地图里，像把春天折了一页。",
+        note: "草坡上开着小花，它没有摘，只把花影带回来了。",
+        souvenir: ["花影书签", "书签上没有香味，却有很轻很轻的春天。"],
+        blessing: "愿你继续保有喜欢美好事物的能力，也被美好事物反复找到。"
+      },
+      shell: {
+        icon: "pic-shell",
+        name: "贝壳护符",
+        wait: "贝壳护符贴近耳边时，像藏着很远的水声。",
+        note: "它在溪边听了很久，水声把一天洗得很干净。",
+        souvenir: ["浅色贝壳", "贝壳里有一点远处的回音，像很干净的祝愿。"],
+        blessing: "愿那些喧闹的日子过后，你总能回到清澈又自在的自己。"
+      }
     };
 
     const routeNotes = {
@@ -1463,9 +2166,9 @@
     };
 
     const stampNotes = {
-      "平安": "盖章：愿你平安，许多事都慢慢稳下来。",
-      "晴朗": "盖章：愿你晴朗，心里常有一点光。",
-      "自由": "盖章：愿你自由，脚步能去想去的地方。"
+      "平安": "信封角落留着一枚小脚印：平安。",
+      "晴朗": "信封角落留着一枚小脚印：晴朗。",
+      "自由": "信封角落留着一枚小脚印：自由。"
     };
 
     const footerLines = {
@@ -1473,13 +2176,24 @@
       pack: "包袱不用太满，刚刚好就能出门。",
       wait: "等待也是旅行的一部分。",
       route: "今天的路，由你轻轻选定。",
+      map: "地图贴好了，路会自己亮一点。",
       travel: "它正在远处，替这封信看风景。",
+      note: "远方先寄回两张小小的字条。",
+      mailbox: "把信箱整理好，风景就不会漏掉。",
       souvenir: "小小的东西，也会记得一路的风。",
-      postcard: "远方先寄回一点安静。",
+      postcard: "远方又寄回一点安静。",
       stamp: "印章很小，心意很认真。",
       return: "它回来了，带着不能提前说的信。",
       envelope: "有些话，要留到最后才打开。",
-      final: "生日快乐，今天的你请被好好祝福。"
+      final: "生日快乐，今天的王圣淇请被好好祝福。"
+    };
+
+    const state = {
+      scene: 0,
+      route: "",
+      stamp: "",
+      selectedPacks: [],
+      timers: []
     };
 
     function clearTimers() {
@@ -1490,6 +2204,16 @@
     function setLater(callback, delay) {
       const timer = window.setTimeout(callback, delay);
       state.timers.push(timer);
+    }
+
+    function selectedItems() {
+      return state.selectedPacks.map((key) => packData[key]);
+    }
+
+    function renderPackedPreview() {
+      packedPreview.innerHTML = state.selectedPacks
+        .map((key) => `<span class="packed-token"><span class="pack-picture ${packData[key].icon}"></span></span>`)
+        .join("");
     }
 
     function showScene(index) {
@@ -1504,6 +2228,9 @@
 
     function runSceneSetup(name) {
       if (name === "wait") {
+        const items = selectedItems();
+        waitBranchOne.textContent = items[0]?.wait || "包袱放在门边，小狐狸认真检查了一遍。";
+        waitBranchTwo.textContent = items[1]?.wait || "它回头点点头，像是在说：我会带点好东西回来。";
         waitNext.disabled = true;
         waitHint.textContent = "请陪它安静一小会儿。";
         waitLines.forEach((line) => line.classList.remove("show"));
@@ -1517,12 +2244,41 @@
       }
 
       if (name === "travel") {
-        travelText.textContent = routeNotes[state.route] || "它把脚步放得很轻，像怕惊动路边刚醒来的草。";
-        setLater(() => showScene(state.scene + 1), 7200);
+        const packLine = selectedItems()[2]?.note || "它把脚步放得很轻，像怕惊动路边刚醒来的草。";
+        travelText.textContent = `${routeNotes[state.route] || "它把脚步放得很轻，像怕惊动路边刚醒来的草。"} ${packLine}`;
+        setLater(() => showScene(state.scene + 1), 7600);
+      }
+
+      if (name === "map") {
+        mapButtons.forEach((button) => button.classList.remove("done"));
+        mapNext.disabled = true;
+        mapHint.textContent = "还差三枚标记。";
+      }
+
+      if (name === "note") {
+        const items = selectedItems();
+        noteButtons.forEach((button) => button.classList.remove("revealed"));
+        noteOne.textContent = items[0]?.note || "小狐狸在路边停下，写了一句很短的话。";
+        noteTwo.textContent = items[1]?.note || "另一张纸角有一点点雨痕。";
+        paperNote.textContent = items[2]?.note || "字条上还盖着小小的爪印，像是刚从风里寄回来。";
+        noteNext.disabled = true;
+        noteHint.textContent = "还差两张字条。";
+      }
+
+      if (name === "mailbox") {
+        mailButtons.forEach((button) => button.classList.remove("done"));
+        mailNext.disabled = true;
+        mailHint.textContent = "还差两片。";
+      }
+
+      if (name === "souvenir") {
+        renderSouvenirs();
       }
 
       if (name === "postcard") {
-        postcardText.textContent = postcardNotes[state.route] || "这里的风很轻。小狐狸说，它把一路看到的好天气都收好了。";
+        postcardTitle.textContent = `${state.route || "旅途中"}：`;
+        const item = selectedItems()[0];
+        postcardText.textContent = `${postcardNotes[state.route] || "这里的风很轻。小狐狸说，它把一路看到的好天气都收好了。"} ${item ? "它还在明信片角落画了" + item.name + "。" : ""}`;
       }
 
       if (name === "return") {
@@ -1537,27 +2293,67 @@
       }
 
       if (name === "final") {
+        const items = selectedItems();
         chosenRoute.textContent = state.route || "一条温柔的路";
-        chosenStamp.textContent = stampNotes[state.stamp] || "盖章：小狐狸的爪印";
+        chosenStamp.textContent = stampNotes[state.stamp] || "信封角落有一枚小狐狸脚印。";
+        souvenirSummary.textContent = items.map((item) => item.souvenir[0]).join("、") || "几件安静发光的小物";
+        branchBlessing.textContent = items.length
+          ? `我想把这些话也放进信里：${items.map((item) => item.blessing).join("")}`
+          : "我想把这句话也放进信里：愿你新的一岁，不必一直很厉害，也可以被温柔接住。";
       }
 
       footerText.textContent = footerLines[name] || footerLines.start;
     }
 
+    function renderSouvenirs() {
+      const items = selectedItems();
+      souvenirGrid.innerHTML = items.map((item, index) => `
+        <button class="souvenir" type="button" data-souvenir>
+          <span class="pack-picture ${item.icon}"></span>
+          <h3>${item.souvenir[0]}</h3>
+          <p>${item.souvenir[1]}</p>
+          <span class="cover">打开小纸包 ${index + 1}</span>
+        </button>
+      `).join("");
+
+      souvenirNext.disabled = true;
+      souvenirHint.textContent = `还差${items.length || 3}件小物。`;
+
+      Array.from(document.querySelectorAll("[data-souvenir]")).forEach((button) => {
+        button.addEventListener("click", () => {
+          button.classList.add("revealed");
+          const total = document.querySelectorAll("[data-souvenir]").length;
+          const count = document.querySelectorAll("[data-souvenir].revealed").length;
+          souvenirNext.disabled = count !== total;
+          souvenirHint.textContent = count === total ? "小物都收好了。" : `还差${total - count}件小物。`;
+        });
+      });
+    }
+
     function resetGame() {
       packButtons.forEach((button) => button.classList.remove("selected"));
       routeButtons.forEach((button) => button.classList.remove("selected"));
+      mapButtons.forEach((button) => button.classList.remove("done"));
+      mailButtons.forEach((button) => button.classList.remove("done"));
       stampButtons.forEach((button) => button.classList.remove("selected"));
-      souvenirButtons.forEach((button) => button.classList.remove("revealed"));
-      packNext.disabled = true;
-      routeNext.disabled = true;
-      stampNext.disabled = true;
-      souvenirNext.disabled = true;
-      packHint.textContent = "还需要选择三样。";
-      souvenirHint.textContent = "还差三件小物。";
-      sealText.textContent = "爪";
+      noteButtons.forEach((button) => button.classList.remove("revealed"));
       state.route = "";
       state.stamp = "";
+      state.selectedPacks = [];
+      packNext.disabled = true;
+      routeNext.disabled = true;
+      mapNext.disabled = true;
+      stampNext.disabled = true;
+      noteNext.disabled = true;
+      mailNext.disabled = true;
+      souvenirNext.disabled = true;
+      packHint.textContent = "还需要选择三样。";
+      mapHint.textContent = "还差三枚标记。";
+      noteHint.textContent = "还差两张字条。";
+      mailHint.textContent = "还差两片。";
+      souvenirHint.textContent = "还差三件小物。";
+      sealText.innerHTML = '<span class="paw-mark"></span>';
+      renderPackedPreview();
       showScene(0);
     }
 
@@ -1571,10 +2367,15 @@
 
     packButtons.forEach((button) => {
       button.addEventListener("click", () => {
-        const selected = packButtons.filter((item) => item.classList.contains("selected"));
-        if (!button.classList.contains("selected") && selected.length >= 3) return;
+        const key = button.dataset.pack;
+        const selected = state.selectedPacks.includes(key);
+        if (!selected && state.selectedPacks.length >= 3) return;
         button.classList.toggle("selected");
-        const count = packButtons.filter((item) => item.classList.contains("selected")).length;
+        state.selectedPacks = selected
+          ? state.selectedPacks.filter((item) => item !== key)
+          : [...state.selectedPacks, key];
+        renderPackedPreview();
+        const count = state.selectedPacks.length;
         packNext.disabled = count !== 3;
         packHint.textContent = count === 3 ? "行囊准备好了。" : `还需要选择${3 - count}样。`;
       });
@@ -1594,14 +2395,38 @@
 
     routeNext.addEventListener("click", () => showScene(state.scene + 1));
 
-    souvenirButtons.forEach((button) => {
+    mapButtons.forEach((button) => {
       button.addEventListener("click", () => {
-        button.classList.add("revealed");
-        const count = souvenirButtons.filter((item) => item.classList.contains("revealed")).length;
-        souvenirNext.disabled = count !== souvenirButtons.length;
-        souvenirHint.textContent = count === souvenirButtons.length ? "小物都收好了。" : `还差${souvenirButtons.length - count}件小物。`;
+        button.classList.add("done");
+        const count = mapButtons.filter((item) => item.classList.contains("done")).length;
+        mapNext.disabled = count !== mapButtons.length;
+        mapHint.textContent = count === mapButtons.length ? "地图拼好了。" : `还差${mapButtons.length - count}枚标记。`;
       });
     });
+
+    mapNext.addEventListener("click", () => showScene(state.scene + 1));
+
+    noteButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        button.classList.add("revealed");
+        const count = noteButtons.filter((item) => item.classList.contains("revealed")).length;
+        noteNext.disabled = count !== noteButtons.length;
+        noteHint.textContent = count === noteButtons.length ? "字条都读完了。" : `还差${noteButtons.length - count}张字条。`;
+      });
+    });
+
+    noteNext.addEventListener("click", () => showScene(state.scene + 1));
+
+    mailButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        button.classList.add("done");
+        const count = mailButtons.filter((item) => item.classList.contains("done")).length;
+        mailNext.disabled = count !== mailButtons.length;
+        mailHint.textContent = count === mailButtons.length ? "信箱整理好了。" : `还差${mailButtons.length - count}片。`;
+      });
+    });
+
+    mailNext.addEventListener("click", () => showScene(state.scene + 1));
 
     souvenirNext.addEventListener("click", () => showScene(state.scene + 1));
 
@@ -1610,7 +2435,7 @@
         stampButtons.forEach((item) => item.classList.remove("selected"));
         button.classList.add("selected");
         state.stamp = button.dataset.stamp;
-        sealText.textContent = button.querySelector("b").textContent;
+        sealText.innerHTML = '<span class="paw-mark"></span>';
         stampNext.disabled = false;
       });
     });
