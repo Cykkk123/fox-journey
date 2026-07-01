@@ -447,6 +447,89 @@
       border-radius: 18px 18px 0 0;
     }
 
+    .satchel::after {
+      position: absolute;
+      content: "";
+      right: -8px;
+      top: 12px;
+      width: 17px;
+      height: 17px;
+      border-radius: 50%;
+      background: var(--gold);
+      opacity: 0;
+      transform: scale(.8);
+      transition: opacity .25s ease, transform .25s ease;
+    }
+
+    .game[data-pack-accent="clover"] .satchel::after,
+    .game[data-pack-accent="flower"] .satchel::after {
+      opacity: 1;
+      transform: scale(1);
+      background: var(--leaf);
+      border-radius: 50% 50% 50% 0;
+      rotate: -45deg;
+    }
+
+    .game[data-pack-accent="lamp"] .satchel::after,
+    .game[data-pack-accent="bell"] .satchel::after {
+      opacity: 1;
+      transform: scale(1);
+      background: var(--gold);
+      box-shadow: 0 0 0 6px rgba(214,169,86,.18);
+    }
+
+    .game[data-pack-accent="paper"] .satchel::after,
+    .game[data-pack-accent="rice"] .satchel::after {
+      opacity: 1;
+      transform: scale(1) rotate(-8deg);
+      width: 20px;
+      height: 15px;
+      border-radius: 4px;
+      background: #fff8ec;
+      box-shadow: inset 0 0 0 1px rgba(103,82,62,.16);
+    }
+
+    .game[data-pack-accent="tea"] .satchel::after,
+    .game[data-pack-accent="shell"] .satchel::after {
+      opacity: 1;
+      transform: scale(1);
+      background: var(--sky);
+    }
+
+    .game[data-current-scene="wait"] .fox {
+      animation-duration: 3.8s;
+    }
+
+    .game[data-current-scene="travel"] .fox-tail {
+      animation: tailWag .8s ease-in-out infinite;
+    }
+
+    .game[data-current-scene="return"] .fox {
+      transform-origin: 50% 100%;
+      animation: tiredFox 3.2s ease-in-out infinite;
+    }
+
+    .game[data-current-scene="return"] .fox-eye {
+      height: 4px;
+      border-radius: 999px;
+      top: 61px;
+    }
+
+    .game[data-current-scene="final"] .fox-cheek,
+    .game[data-current-scene="envelope"] .fox-cheek {
+      background: rgba(196,124,120,.62);
+    }
+
+    @keyframes tailWag {
+      0%, 100% { transform: rotate(-20deg); }
+      50% { transform: rotate(-9deg); }
+    }
+
+    @keyframes tiredFox {
+      0%, 100% { transform: translateY(0) rotate(-1deg); }
+      50% { transform: translateY(2px) rotate(1deg); }
+    }
+
     .shadow {
       width: 155px;
       height: 20px;
@@ -992,6 +1075,59 @@
       border-radius: 999px;
       background: rgba(255,255,255,.55);
       transform: translateX(-50%);
+    }
+
+    .empty-mailbox {
+      position: relative;
+      width: min(100%, 360px);
+      min-height: 220px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255,250,242,.92);
+      box-shadow: 0 18px 45px rgba(82,62,43,.12);
+      overflow: hidden;
+    }
+
+    .empty-mailbox::before {
+      position: absolute;
+      content: "";
+      left: 50%;
+      bottom: 40px;
+      width: 150px;
+      height: 90px;
+      border-radius: 44px 44px 10px 10px;
+      background: #bd756f;
+      transform: translateX(-50%);
+      box-shadow: inset 0 -10px 0 rgba(82,62,43,.08);
+    }
+
+    .empty-mailbox::after {
+      position: absolute;
+      content: "";
+      left: 50%;
+      bottom: 88px;
+      width: 92px;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.58);
+      transform: translateX(-50%);
+    }
+
+    .empty-note {
+      position: absolute;
+      left: 50%;
+      top: 42px;
+      width: 210px;
+      min-height: 58px;
+      display: grid;
+      place-items: center;
+      padding: 12px 16px;
+      border: 1px solid rgba(103,82,62,.18);
+      border-radius: 7px;
+      color: var(--muted);
+      background: #fffaf2;
+      transform: translateX(-50%) rotate(-1deg);
+      line-height: 1.6;
     }
 
     @keyframes tokenIn {
@@ -1736,7 +1872,7 @@
       <div class="stage wide">
         <div class="copy">
           <h2>准备行囊</h2>
-          <p>从八样东西里选三样。不同的行囊，会让小狐狸遇见不同的小事，也会改变它最后带回来的话。</p>
+          <p>选三样放进包袱。路上会发生什么，先不告诉你。</p>
         </div>
         <div class="box-scene" aria-hidden="true">
           <div class="cloth"></div>
@@ -1796,7 +1932,7 @@
       <div class="stage">
         <div class="copy">
           <h2>等它出门</h2>
-          <p>小狐狸不会立刻回来。你可以像等一张明信片那样，陪这个房间安静一会儿。</p>
+          <p>小狐狸不会立刻回来。先陪房间安静一会儿。</p>
         </div>
         <div class="wait-card">
           <div class="window" aria-hidden="true">
@@ -1818,7 +1954,7 @@
       <div class="stage wide">
         <div class="copy">
           <h2>选择今日路线</h2>
-          <p>它可能走过溪边、车站，或一小片星光。不同的路会寄回不同的风景。</p>
+          <p>选一条路。远处的风景会自己展开。</p>
         </div>
         <div class="route-grid">
           <button class="route" type="button" data-route="溪边小路">
@@ -1845,7 +1981,7 @@
       <div class="stage wide">
         <div class="copy">
           <h2>给地图贴路标</h2>
-          <p>出发前，地图上还空着一处。选一枚路标贴上去，小狐狸会照着它记住今天的方向。</p>
+          <p>地图还空着一处。选一枚路标贴上去。</p>
         </div>
         <div class="map-board" aria-hidden="true">
           <div class="map-trail"></div>
@@ -1915,7 +2051,7 @@
       <div class="stage wide">
         <div class="copy">
           <h2>途中寄来字条</h2>
-          <p>邮差把两张小纸片放进信箱。点开看看，小狐狸在远处写了什么。</p>
+          <p>邮差放下两张小纸片。点开看看。</p>
         </div>
         <div class="note-board" aria-hidden="true">
           <div class="paper-note" id="paperNote">字条上还盖着小小的爪印，像是刚从风里寄回来。</div>
@@ -1941,7 +2077,7 @@
       <div class="stage wide">
         <div class="copy">
           <h2>整理信箱</h2>
-          <p>信箱里躺着几件小东西。选两件收好，后面的明信片会带上它们的痕迹。</p>
+          <p>信箱里有几件小东西。选两件收好。</p>
         </div>
         <div class="mail-scene" aria-hidden="true">
           <div class="star" style="left: 28%; top: 56px;"></div>
@@ -1978,7 +2114,7 @@
       <div class="stage wide">
         <div class="copy">
           <h2>翻看带回的小物</h2>
-          <p>小物会根据你放进包袱的东西变化。它们看似普通，却都被小狐狸好好收着。</p>
+          <p>包袱里多了几件小物。慢慢打开。</p>
         </div>
         <div class="souvenir-grid" id="souvenirGrid"></div>
         <button class="primary" type="button" id="souvenirNext" disabled>收进行囊册</button>
@@ -2035,6 +2171,20 @@
       </div>
     </section>
 
+    <section class="scene" data-scene="empty">
+      <div class="stage">
+        <div class="copy">
+          <h2>信箱暂时空着</h2>
+          <p>风从门口经过了一次，什么也没有落下。</p>
+        </div>
+        <div class="empty-mailbox" aria-hidden="true">
+          <div class="empty-note" id="emptyNote">再等一小会儿。</div>
+        </div>
+        <button class="primary" type="button" id="emptyNext" disabled>听见脚步声</button>
+        <div class="tiny" id="emptyHint">小狐狸还在路上。</div>
+      </div>
+    </section>
+
     <section class="scene" data-scene="return">
       <div class="stage">
         <div class="illustration" aria-hidden="true">
@@ -2073,7 +2223,7 @@
       <div class="stage">
         <div class="copy">
           <h2>一封安静的信</h2>
-          <p>到这里才可以拆开。小狐狸把爪印按在信封角落，像是认真完成了委托。</p>
+          <p>到这里才可以拆开。信封角落有一枚小脚印。</p>
         </div>
         <button class="envelope" type="button" id="envelope" aria-label="打开信封">
           <span class="flap"></span>
@@ -2090,8 +2240,10 @@
           <p>生日快乐。</p>
           <p>小狐狸走过了<span id="chosenRoute">一条温柔的路</span>，带回了<span id="souvenirSummary">几件安静发光的小物</span>。它说，这些小东西都不吵闹，却都认真地保存着一路的风。</p>
           <p id="branchBlessing">我想把这句话也放进信里：愿你新的一岁，不必一直很厉害，也可以被温柔接住。</p>
-          <p>愿你睡得安稳，笑得轻松。愿那些真正珍惜你的人，看得见你的辛苦，也记得给你偏爱和回应。</p>
-          <p><strong>谢谢你来到这个世界。也谢谢你一直成为你自己。</strong></p>
+          <p>王圣淇，愿你新的一岁，能去更多想去的地方：看新的城市、走新的路，也在某个不赶时间的早晨，喝到一杯刚刚好的咖啡。</p>
+          <p>也愿你像长跑时那样，按自己的节奏往前。快也好，慢也好，只要呼吸还稳，路就会一点一点在脚下展开。</p>
+          <p>Happy birthday anniversary. 这个只有我们懂的小梗，也一起放进信里，像一枚偷偷盖好的纪念章。</p>
+          <p><strong>谢谢你来到这个世界。今天这封信，只写给你。</strong></p>
           <p class="signature" id="chosenStamp">信封角落有一枚小狐狸脚印。</p>
         </article>
         <div class="buttons">
@@ -2141,6 +2293,9 @@
     const postcardText = document.getElementById("postcardText");
     const stampButtons = Array.from(document.querySelectorAll("[data-stamp]"));
     const stampNext = document.getElementById("stampNext");
+    const emptyNext = document.getElementById("emptyNext");
+    const emptyHint = document.getElementById("emptyHint");
+    const emptyNote = document.getElementById("emptyNote");
     const returnText = document.getElementById("returnText");
     const envelope = document.getElementById("envelope");
     const envelopeNext = document.getElementById("envelopeNext");
@@ -2299,7 +2454,8 @@
       mailbox: "把信箱整理好，风景就不会漏掉。",
       souvenir: "小小的东西，也会记得一路的风。",
       postcard: "远方又寄回一点安静。",
-      stamp: "印章很小，心意很认真。",
+      stamp: "小印记留好了。",
+      empty: "空一会儿，才更像真的等待。",
       return: "它回来了，带着不能提前说的信。",
       envelope: "有些话，要留到最后才打开。",
       final: "生日快乐，今天的王圣淇请被好好祝福。"
@@ -2341,6 +2497,7 @@
       scenes.forEach((scene, sceneIndex) => {
         scene.classList.toggle("active", sceneIndex === index);
       });
+      document.querySelector(".game").dataset.currentScene = scenes[index].dataset.scene;
       progressBar.style.width = `${Math.round((index / (scenes.length - 1)) * 100)}%`;
       runSceneSetup(scenes[index].dataset.scene);
     }
@@ -2420,6 +2577,17 @@
           : `包袱比出发时轻了一点，信却变得很满。${mailLine} 它站在门口，等你接过来。`;
       }
 
+      if (name === "empty") {
+        emptyNext.disabled = true;
+        emptyHint.textContent = "小狐狸还在路上。";
+        emptyNote.textContent = "再等一小会儿。";
+        setLater(() => {
+          emptyNote.textContent = "信箱轻轻响了一下。";
+          emptyHint.textContent = "门口有很轻的脚步声。";
+          emptyNext.disabled = false;
+        }, 3600);
+      }
+
       if (name === "envelope") {
         envelope.classList.remove("open");
         envelopeNext.disabled = true;
@@ -2433,8 +2601,8 @@
         const mapFinal = mapData[state.mapMark]?.final || "";
         const mailFinal = state.mailPieces.map((key) => mailData[key]?.final).filter(Boolean).join("");
         branchBlessing.textContent = items.length
-          ? `我想把这些话也放进信里：${items.map((item) => item.blessing).join("")}${mapFinal}${mailFinal}`
-          : "我想把这句话也放进信里：愿你新的一岁，不必一直很厉害，也可以被温柔接住。";
+          ? `小狐狸把这些话也一起带了回来：${items.map((item) => item.blessing).join("")}${mapFinal}${mailFinal}`
+          : "小狐狸把这句话也一起带了回来：愿你新的一岁，不必一直很厉害，也可以被温柔接住。";
       }
 
       footerText.textContent = footerLines[name] || footerLines.start;
@@ -2477,6 +2645,7 @@
       state.mapMark = "";
       state.mailPieces = [];
       state.selectedPacks = [];
+      document.querySelector(".game").dataset.packAccent = "";
       packNext.disabled = true;
       routeNext.disabled = true;
       mapNext.disabled = true;
@@ -2512,6 +2681,7 @@
           ? state.selectedPacks.filter((item) => item !== key)
           : [...state.selectedPacks, key];
         renderPackedPreview();
+        document.querySelector(".game").dataset.packAccent = state.selectedPacks[0] || "";
         const count = state.selectedPacks.length;
         packNext.disabled = count !== 3;
         packHint.textContent = count === 3 ? "行囊准备好了。" : `还需要选择${3 - count}样。`;
@@ -2585,6 +2755,7 @@
     });
 
     stampNext.addEventListener("click", () => showScene(state.scene + 1));
+    emptyNext.addEventListener("click", () => showScene(state.scene + 1));
 
     envelope.addEventListener("click", () => {
       envelope.classList.add("open");
