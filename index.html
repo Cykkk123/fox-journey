@@ -1202,6 +1202,58 @@
       overflow: hidden;
     }
 
+    .travel-art.stream {
+      background: linear-gradient(180deg, rgba(183,213,213,.22), transparent 55%);
+    }
+
+    .travel-art.station {
+      background: linear-gradient(180deg, rgba(239,199,145,.18), transparent 58%);
+    }
+
+    .travel-art.hill-night {
+      background: linear-gradient(180deg, rgba(86,101,124,.2), transparent 60%);
+    }
+
+    .travel-art.stream::after,
+    .travel-art.station::after,
+    .travel-art.hill-night::after {
+      position: absolute;
+      content: "";
+      pointer-events: none;
+    }
+
+    .travel-art.stream::after {
+      left: 56px;
+      bottom: 62px;
+      width: 160px;
+      height: 26px;
+      border-radius: 50%;
+      border-bottom: 5px solid rgba(109,153,157,.42);
+      transform: rotate(-8deg);
+    }
+
+    .travel-art.station::after {
+      right: 52px;
+      bottom: 74px;
+      width: 118px;
+      height: 70px;
+      border-radius: 8px 8px 3px 3px;
+      background:
+        linear-gradient(90deg, transparent 47%, rgba(255,255,255,.55) 47% 53%, transparent 53%),
+        linear-gradient(#b77c69 0 22%, #f4dfb9 22% 100%);
+      box-shadow: 0 28px 0 -22px rgba(103,82,62,.26);
+    }
+
+    .travel-art.hill-night::after {
+      left: 70px;
+      top: 42px;
+      width: 16px;
+      height: 16px;
+      background: var(--gold);
+      clip-path: polygon(50% 0, 62% 36%, 100% 50%, 62% 64%, 50% 100%, 38% 64%, 0 50%, 38% 36%);
+      box-shadow: 74px 28px 0 rgba(214,169,86,.72), 180px -4px 0 rgba(214,169,86,.55);
+    }
+
     .travel-art .fox-wrap {
       position: absolute;
       left: 50%;
@@ -1473,6 +1525,106 @@
       clip-path: polygon(50% 0, 62% 36%, 100% 50%, 62% 64%, 50% 100%, 38% 64%, 0 50%, 38% 36%);
       box-shadow: 45px 22px 0 rgba(214,169,86,.72);
       transform: none;
+    }
+
+    .letter p.letter-step {
+      display: none;
+      opacity: 0;
+      transform: translateY(6px);
+    }
+
+    .letter p.letter-step.revealed {
+      display: block;
+      animation: letterLineIn .42s ease forwards;
+    }
+
+    @keyframes letterLineIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .keepsake {
+      width: min(100%, 460px);
+      min-height: 420px;
+      position: relative;
+      display: grid;
+      align-content: end;
+      justify-items: center;
+      gap: 18px;
+      padding: 34px 28px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255,250,242,.92);
+      box-shadow: 0 18px 45px rgba(82,62,43,.12);
+      overflow: hidden;
+    }
+
+    .keepsake::before {
+      position: absolute;
+      content: "";
+      left: 50%;
+      top: 32px;
+      width: 260px;
+      height: 178px;
+      border: 1px solid rgba(103,82,62,.18);
+      border-radius: 8px;
+      background:
+        linear-gradient(180deg, rgba(168,200,198,.42), rgba(255,250,242,.1)),
+        #fff8eb;
+      transform: translateX(-50%) rotate(-1deg);
+    }
+
+    .sleeping-fox {
+      position: absolute;
+      left: 50%;
+      top: 100px;
+      width: 120px;
+      height: 70px;
+      border-radius: 60px 60px 35px 35px;
+      background: var(--fox);
+      transform: translateX(-50%);
+      box-shadow: inset -18px -12px 0 rgba(189,109,67,.28);
+    }
+
+    .sleeping-fox::before {
+      position: absolute;
+      content: "";
+      left: -28px;
+      bottom: 6px;
+      width: 72px;
+      height: 36px;
+      border-radius: 50px 12px 50px 16px;
+      background: var(--fox);
+      transform: rotate(-14deg);
+    }
+
+    .sleeping-fox::after {
+      position: absolute;
+      content: "";
+      right: 22px;
+      top: 25px;
+      width: 22px;
+      height: 3px;
+      border-radius: 999px;
+      background: #49382c;
+      box-shadow: -20px 0 0 #49382c;
+    }
+
+    .keepsake-text {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      gap: 10px;
+      text-align: center;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    .keepsake-text strong {
+      color: var(--ink);
+      font-weight: 600;
     }
 
     .sun {
@@ -2036,7 +2188,7 @@
 
     <section class="scene" data-scene="travel">
       <div class="stage">
-        <div class="travel-art" aria-hidden="true">
+        <div class="travel-art" id="travelArt" aria-hidden="true">
           <div class="cloud one"></div>
           <div class="cloud two"></div>
           <div class="cloud three"></div>
@@ -2246,7 +2398,7 @@
       <div class="stage">
         <div class="copy">
           <h2>一封安静的信</h2>
-          <p>到这里才可以拆开。信封角落有一枚小脚印。</p>
+          <p id="envelopeHint">轻点信封三下，小狐狸会把信交给你。</p>
         </div>
         <button class="envelope" type="button" id="envelope" aria-label="打开信封">
           <span class="flap"></span>
@@ -2259,19 +2411,36 @@
     <section class="scene" data-scene="final">
       <div class="stage">
         <article class="letter">
-          <p>亲爱的王圣淇：</p>
-          <p>生日快乐。</p>
-          <p>小狐狸走过了<span id="chosenRoute">一条温柔的路</span>，带回了<span id="souvenirSummary">几件安静发光的小物</span>。它说，这些小东西都不吵闹，却都认真地保存着一路的风。</p>
-          <p id="branchBlessing">我想把这句话也放进信里：愿你新的一岁，不必一直很厉害，也可以被温柔接住。</p>
-          <p>王圣淇，愿你新的一岁，能去更多想去的地方：看新的城市、走新的路，也在某个不赶时间的早晨，喝到一杯刚刚好的咖啡。</p>
-          <p>也愿你像长跑时那样，按自己的节奏往前。快也好，慢也好，只要呼吸还稳，路就会一点一点在脚下展开。</p>
-          <p>Happy birthday anniversary. 这个只有我们懂的小梗，也一起放进信里，像一枚偷偷盖好的纪念章。</p>
-          <p><strong>谢谢你来到这个世界。今天这封信，只写给你。</strong></p>
-          <p class="signature" id="chosenStamp">信封角落有一枚小狐狸脚印。</p>
+          <p class="letter-step">亲爱的王圣淇：</p>
+          <p class="letter-step">生日快乐。</p>
+          <p class="letter-step">小狐狸走过了<span id="chosenRoute">一条温柔的路</span>，带回了<span id="souvenirSummary">几件安静发光的小物</span>。它说，这些小东西都不吵闹，却都认真地保存着一路的风。</p>
+          <p class="letter-step" id="branchBlessing">我想把这句话也放进信里：愿你新的一岁，不必一直很厉害，也可以被温柔接住。</p>
+          <p class="letter-step">王圣淇，愿你新的一岁，能去更多想去的地方：看新的城市、走新的路，也在某个不赶时间的早晨，喝到一杯刚刚好的咖啡。</p>
+          <p class="letter-step">也愿你像长跑时那样，按自己的节奏往前。快也好，慢也好，只要呼吸还稳，路就会一点一点在脚下展开。</p>
+          <p class="letter-step">Happy birthday anniversary. 这个只有我们懂的小梗，也一起放进信里，像一枚偷偷盖好的纪念章。</p>
+          <p class="letter-step"><strong>谢谢你来到这个世界。今天这封信，只写给你。</strong></p>
+          <p class="letter-step signature" id="chosenStamp">信封角落有一枚小狐狸脚印。</p>
         </article>
         <div class="buttons">
-          <button class="primary" type="button" data-restart>再旅行一次</button>
+          <button class="primary" type="button" id="letterNext">继续读</button>
+          <button class="primary" type="button" id="keepLetter" disabled>收好这封信</button>
           <button class="quiet" type="button" id="slowAgain">从拆信前开始</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="scene" data-scene="keepsake">
+      <div class="stage">
+        <div class="keepsake">
+          <div class="sleeping-fox" aria-hidden="true"></div>
+          <div class="keepsake-text">
+            <strong>旅程纪念</strong>
+            <span id="journeySummary">小狐狸把这封信送到了。</span>
+            <span>它睡在信旁边，今天的路就到这里。</span>
+          </div>
+        </div>
+        <div class="buttons">
+          <button class="primary" type="button" data-restart>再旅行一次</button>
         </div>
       </div>
     </section>
@@ -2298,6 +2467,7 @@
     const mapButtons = Array.from(document.querySelectorAll("[data-map]"));
     const mapNext = document.getElementById("mapNext");
     const mapHint = document.getElementById("mapHint");
+    const travelArt = document.getElementById("travelArt");
     const travelText = document.getElementById("travelText");
     const noteButtons = Array.from(document.querySelectorAll("[data-note]"));
     const noteNext = document.getElementById("noteNext");
@@ -2321,12 +2491,17 @@
     const emptyNote = document.getElementById("emptyNote");
     const returnText = document.getElementById("returnText");
     const envelope = document.getElementById("envelope");
+    const envelopeHint = document.getElementById("envelopeHint");
     const envelopeNext = document.getElementById("envelopeNext");
     const sealText = document.getElementById("sealText");
     const chosenRoute = document.getElementById("chosenRoute");
     const chosenStamp = document.getElementById("chosenStamp");
     const souvenirSummary = document.getElementById("souvenirSummary");
     const branchBlessing = document.getElementById("branchBlessing");
+    const letterSteps = Array.from(document.querySelectorAll(".letter-step"));
+    const letterNext = document.getElementById("letterNext");
+    const keepLetter = document.getElementById("keepLetter");
+    const journeySummary = document.getElementById("journeySummary");
     const slowAgain = document.getElementById("slowAgain");
     const footerText = document.getElementById("footerText");
 
@@ -2481,7 +2656,8 @@
       empty: "空一会儿，才更像真的等待。",
       return: "它回来了，带着不能提前说的信。",
       envelope: "有些话，要留到最后才打开。",
-      final: "生日快乐，今天的王圣淇请被好好祝福。"
+      final: "生日快乐，今天的王圣淇请被好好祝福。",
+      keepsake: "这趟小旅程被好好收起来了。"
     };
 
     const state = {
@@ -2491,6 +2667,8 @@
       mapMark: "",
       mailPieces: [],
       selectedPacks: [],
+      envelopeTaps: 0,
+      letterIndex: 0,
       timers: []
     };
 
@@ -2545,6 +2723,12 @@
       if (name === "travel") {
         const packLine = selectedItems()[2]?.note || "它把脚步放得很轻，像怕惊动路边刚醒来的草。";
         const mapLine = mapData[state.mapMark]?.travel || "";
+        const routeClass = {
+          "溪边小路": "stream",
+          "黄昏车站": "station",
+          "星星山坡": "hill-night"
+        }[state.route] || "";
+        travelArt.className = `travel-art ${routeClass}`;
         travelText.textContent = `${routeNotes[state.route] || "它把脚步放得很轻，像怕惊动路边刚醒来的草。"} ${mapLine} ${packLine}`.trim();
         setLater(() => showScene(state.scene + 1), 7600);
       }
@@ -2614,6 +2798,8 @@
       if (name === "envelope") {
         envelope.classList.remove("open");
         envelopeNext.disabled = true;
+        state.envelopeTaps = 0;
+        envelopeHint.textContent = "轻点信封三下，小狐狸会把信交给你。";
       }
 
       if (name === "final") {
@@ -2626,6 +2812,18 @@
         branchBlessing.textContent = items.length
           ? `小狐狸把这些话也一起带了回来：${items.map((item) => item.blessing).join("")}${mapFinal}${mailFinal}`
           : "小狐狸把这句话也一起带了回来：愿你新的一岁，不必一直很厉害，也可以被温柔接住。";
+        state.letterIndex = 0;
+        letterSteps.forEach((step) => step.classList.remove("revealed"));
+        letterNext.disabled = false;
+        letterNext.textContent = "继续读";
+        keepLetter.disabled = true;
+        revealNextLetterLine();
+      }
+
+      if (name === "keepsake") {
+        const items = selectedItems().map((item) => item.souvenir[0]);
+        const mailNames = state.mailPieces.map((key) => mailData[key]?.name).filter(Boolean);
+        journeySummary.textContent = `王圣淇收到：${[state.route, mapData[state.mapMark]?.name, ...items, ...mailNames].filter(Boolean).join("、")}。`;
       }
 
       footerText.textContent = footerLines[name] || footerLines.start;
@@ -2668,6 +2866,8 @@
       state.mapMark = "";
       state.mailPieces = [];
       state.selectedPacks = [];
+      state.envelopeTaps = 0;
+      state.letterIndex = 0;
       document.querySelector(".game").dataset.packAccent = "";
       packNext.disabled = true;
       routeNext.disabled = true;
@@ -2684,6 +2884,19 @@
       sealText.innerHTML = '<span class="paw-mark"></span>';
       renderPackedPreview();
       showScene(0);
+    }
+
+    function revealNextLetterLine() {
+      if (state.letterIndex < letterSteps.length) {
+        letterSteps[state.letterIndex].classList.add("revealed");
+        state.letterIndex += 1;
+      }
+
+      if (state.letterIndex >= letterSteps.length) {
+        letterNext.disabled = true;
+        letterNext.textContent = "已经读完";
+        keepLetter.disabled = false;
+      }
     }
 
     nextButtons.forEach((button) => {
@@ -2781,13 +2994,21 @@
     emptyNext.addEventListener("click", () => showScene(state.scene + 1));
 
     envelope.addEventListener("click", () => {
-      envelope.classList.add("open");
-      setLater(() => {
-        envelopeNext.disabled = false;
-      }, 700);
+      if (envelope.classList.contains("open")) return;
+      state.envelopeTaps += 1;
+      const left = Math.max(0, 3 - state.envelopeTaps);
+      envelopeHint.textContent = left ? `还差${left}下。` : "信封打开了。";
+      if (state.envelopeTaps >= 3) {
+        envelope.classList.add("open");
+        setLater(() => {
+          envelopeNext.disabled = false;
+        }, 700);
+      }
     });
 
     envelopeNext.addEventListener("click", () => showScene(state.scene + 1));
+    letterNext.addEventListener("click", revealNextLetterLine);
+    keepLetter.addEventListener("click", () => showScene(state.scene + 1));
 
     slowAgain.addEventListener("click", () => {
       showScene(scenes.findIndex((scene) => scene.dataset.scene === "envelope"));
