@@ -1265,19 +1265,42 @@
       to { translate: 820px 0; }
     }
 
-    .dots::after {
-      display: inline-block;
-      content: "";
-      width: 1.4em;
-      text-align: left;
-      animation: dots 1.5s steps(4, end) infinite;
+    .trail-title {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
     }
 
-    @keyframes dots {
-      0% { content: ""; }
-      25% { content: "。"; }
-      50% { content: "。。"; }
-      75%, 100% { content: "。。。"; }
+    .tiny-trail {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transform: translateY(2px);
+    }
+
+    .tiny-trail i {
+      display: block;
+      width: 9px;
+      height: 13px;
+      border-radius: 50% 50% 45% 45%;
+      background: rgba(81,72,62,.42);
+      transform: rotate(-18deg);
+      animation: pawStep 1.35s ease-in-out infinite;
+    }
+
+    .tiny-trail i:nth-child(2) {
+      animation-delay: .18s;
+      transform: rotate(16deg);
+    }
+
+    .tiny-trail i:nth-child(3) {
+      animation-delay: .36s;
+    }
+
+    @keyframes pawStep {
+      0%, 100% { opacity: .28; translate: 0 2px; }
+      45% { opacity: .9; translate: 0 -2px; }
     }
 
     .note-board {
@@ -2041,7 +2064,7 @@
           </div>
         </div>
         <div class="copy">
-          <h2 class="dots">小狐狸旅行中</h2>
+          <h2 class="trail-title">沿路走着 <span class="tiny-trail" aria-hidden="true"><i></i><i></i><i></i></span></h2>
           <p id="travelText">它把脚步放得很轻，像怕惊动路边刚醒来的草。</p>
         </div>
       </div>
