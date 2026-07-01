@@ -1261,6 +1261,61 @@
       background: linear-gradient(180deg, rgba(168,200,198,.88) 0 48%, rgba(229,216,180,.92) 48% 100%);
     }
 
+    .postcard-art.misty {
+      background: linear-gradient(180deg, rgba(183,205,197,.9) 0 45%, rgba(216,221,190,.92) 45% 100%);
+    }
+
+    .postcard-art.night {
+      background: linear-gradient(180deg, rgba(86,101,124,.92) 0 50%, rgba(105,126,102,.9) 50% 100%);
+    }
+
+    .postcard-art.warm {
+      background: linear-gradient(180deg, rgba(236,192,142,.9) 0 48%, rgba(223,209,168,.94) 48% 100%);
+    }
+
+    .postcard-art.rain::after,
+    .postcard-art.ticket::after,
+    .postcard-art.flower-mail::after,
+    .postcard-art.star-mail::after {
+      position: absolute;
+      content: "";
+      left: 38px;
+      top: 42px;
+      width: 9px;
+      height: 22px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.62);
+      box-shadow: 34px 18px 0 rgba(255,255,255,.45), 76px -8px 0 rgba(255,255,255,.5), 118px 24px 0 rgba(255,255,255,.38);
+      transform: rotate(18deg);
+    }
+
+    .postcard-art.ticket::after {
+      width: 62px;
+      height: 38px;
+      border-radius: 6px;
+      background: #fff5de;
+      box-shadow: inset 0 0 0 1px rgba(103,82,62,.2);
+      transform: rotate(-9deg);
+    }
+
+    .postcard-art.flower-mail::after {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #c47c78;
+      box-shadow: 13px 6px 0 #c47c78, -11px 8px 0 #d99a97, 2px 18px 0 #d99a97;
+      transform: none;
+    }
+
+    .postcard-art.star-mail::after {
+      width: 22px;
+      height: 22px;
+      background: var(--gold);
+      clip-path: polygon(50% 0, 62% 36%, 100% 50%, 62% 64%, 50% 100%, 38% 64%, 0 50%, 38% 36%);
+      box-shadow: 45px 22px 0 rgba(214,169,86,.72);
+      transform: none;
+    }
+
     .sun {
       position: absolute;
       top: 34px;
@@ -1789,8 +1844,8 @@
     <section class="scene" data-scene="map">
       <div class="stage wide">
         <div class="copy">
-          <h2>把地图拼好</h2>
-          <p>出发前，地图还缺三枚小标记。把它们轻轻按上去，路就会慢慢露出来。</p>
+          <h2>给地图贴路标</h2>
+          <p>出发前，地图上还空着一处。选一枚路标贴上去，小狐狸会照着它记住今天的方向。</p>
         </div>
         <div class="map-board" aria-hidden="true">
           <div class="map-trail"></div>
@@ -1799,24 +1854,24 @@
           <div class="map-pin three"></div>
         </div>
         <div class="map-grid">
-          <button class="map-piece" type="button" data-map>
-            <b>一</b>
-            起点标记
-            <span>贴在门口，提醒它回家的方向。</span>
+          <button class="map-piece" type="button" data-map="misty">
+            <b>林</b>
+            林间雾标
+            <span>像清晨的树影，安静地贴在地图角落。</span>
           </button>
-          <button class="map-piece" type="button" data-map>
-            <b>二</b>
-            风向标记
-            <span>贴在中途，听一听今天的风。</span>
+          <button class="map-piece" type="button" data-map="warm">
+            <b>阳</b>
+            午后阳标
+            <span>颜色暖暖的，像被晒过一小会儿。</span>
           </button>
-          <button class="map-piece" type="button" data-map>
-            <b>三</b>
-            归程标记
-            <span>贴在终点，让信不会迷路。</span>
+          <button class="map-piece" type="button" data-map="night">
+            <b>夜</b>
+            星夜路标
+            <span>边缘有一点深蓝，像夜里亮起的路。</span>
           </button>
         </div>
         <button class="primary" type="button" id="mapNext" disabled>收起地图</button>
-        <div class="tiny" id="mapHint">还差三枚标记。</div>
+        <div class="tiny" id="mapHint">请选择一枚路标。</div>
       </div>
     </section>
 
@@ -1886,26 +1941,36 @@
       <div class="stage wide">
         <div class="copy">
           <h2>整理信箱</h2>
-          <p>小狐狸寄来的纸片有点乱。把信箱里的小碎片收好，后面的明信片才会完整。</p>
+          <p>信箱里躺着几件小东西。选两件收好，后面的明信片会带上它们的痕迹。</p>
         </div>
         <div class="mail-scene" aria-hidden="true">
           <div class="star" style="left: 28%; top: 56px;"></div>
           <div class="leaf-dot" style="right: 31%; top: 72px;"></div>
         </div>
         <div class="mail-grid">
-          <button class="mail-piece" type="button" data-mail>
+          <button class="mail-piece" type="button" data-mail="rain">
             <b>邮</b>
-            小邮戳
-            <span>边缘有一点点红色。</span>
+            雨点邮戳
+            <span>边缘有一点湿润的蓝色。</span>
           </button>
-          <button class="mail-piece" type="button" data-mail>
+          <button class="mail-piece" type="button" data-mail="ticket">
             <b>角</b>
-            明信片角
-            <span>摸起来像被风吹过。</span>
+            旧车票角
+            <span>摸起来像被黄昏吹过。</span>
+          </button>
+          <button class="mail-piece" type="button" data-mail="flower">
+            <b>花</b>
+            花影贴纸
+            <span>很薄，像从草坡上轻轻揭下来。</span>
+          </button>
+          <button class="mail-piece" type="button" data-mail="star">
+            <b>星</b>
+            星点贴纸
+            <span>小小一枚，不亮却很认真。</span>
           </button>
         </div>
         <button class="primary" type="button" id="mailNext" disabled>放回信箱</button>
-        <div class="tiny" id="mailHint">还差两片。</div>
+        <div class="tiny" id="mailHint">请选择两件小东西。</div>
       </div>
     </section>
 
@@ -1928,7 +1993,7 @@
           <p>没有写很多字，只有路上的风景和一句短短的留言。</p>
         </div>
         <article class="postcard">
-          <div class="postcard-art" aria-hidden="true">
+          <div class="postcard-art" id="postcardArt" aria-hidden="true">
             <div class="sun"></div>
             <div class="hill"></div>
             <div class="hill second"></div>
@@ -2071,6 +2136,7 @@
     const souvenirGrid = document.getElementById("souvenirGrid");
     const souvenirNext = document.getElementById("souvenirNext");
     const souvenirHint = document.getElementById("souvenirHint");
+    const postcardArt = document.getElementById("postcardArt");
     const postcardTitle = document.getElementById("postcardTitle");
     const postcardText = document.getElementById("postcardText");
     const stampButtons = Array.from(document.querySelectorAll("[data-stamp]"));
@@ -2165,6 +2231,57 @@
       "星星山坡": "山坡上的草很软。小狐狸说，它捡到一粒不会熄灭的小星光。"
     };
 
+    const mapData = {
+      misty: {
+        name: "林间雾标",
+        art: "misty",
+        travel: "地图上的雾标让它多绕进一小片树林，叶子把脚步声收得很轻。",
+        postcard: "明信片边缘有一点雾气，小狐狸说，安静的路也会把人送到想去的地方。",
+        final: "那枚林间雾标提醒它：有些答案不必太快出现，慢慢走也很好。"
+      },
+      warm: {
+        name: "午后阳标",
+        art: "warm",
+        travel: "午后阳标在地图上亮了一下，它于是找了一段晒得到太阳的小路。",
+        postcard: "明信片像晒过太阳，小狐狸说，温暖有时就是刚好停在身边。",
+        final: "那枚午后阳标把一路晒得很暖，像是在提醒：好日子可以慢慢攒起来。"
+      },
+      night: {
+        name: "星夜路标",
+        art: "night",
+        travel: "星夜路标让它晚一点才回头，夜色里有很小很亮的方向。",
+        postcard: "明信片底色深了一点，小狐狸说，夜路也并不总是孤单。",
+        final: "那枚星夜路标陪它走过暗下来的路，也把一点勇气放进信里。"
+      }
+    };
+
+    const mailData = {
+      rain: {
+        name: "雨点邮戳",
+        art: "rain",
+        line: "邮戳旁边有雨点，像路上短暂停过的一场小雨。",
+        final: "雨点邮戳留在纸边，像提醒人疲惫时也可以先躲一躲雨。"
+      },
+      ticket: {
+        name: "旧车票角",
+        art: "ticket",
+        line: "车票角贴在明信片上，像有一班黄昏列车刚刚经过。",
+        final: "旧车票角夹在信里，像把那些值得等待的时刻都轻轻收好。"
+      },
+      flower: {
+        name: "花影贴纸",
+        art: "flower-mail",
+        line: "花影贴纸贴得有点歪，却让整张明信片都柔和起来。",
+        final: "花影贴纸没有香味，却把很轻的春天留在了信封里。"
+      },
+      star: {
+        name: "星点贴纸",
+        art: "star-mail",
+        line: "星点贴纸很小，贴上去以后，远方像多亮了一点。",
+        final: "星点贴纸亮得很安静，像替你守着一点不灭的小愿望。"
+      }
+    };
+
     const stampNotes = {
       "平安": "信封角落留着一枚小脚印：平安。",
       "晴朗": "信封角落留着一枚小脚印：晴朗。",
@@ -2192,6 +2309,8 @@
       scene: 0,
       route: "",
       stamp: "",
+      mapMark: "",
+      mailPieces: [],
       selectedPacks: [],
       timers: []
     };
@@ -2245,14 +2364,16 @@
 
       if (name === "travel") {
         const packLine = selectedItems()[2]?.note || "它把脚步放得很轻，像怕惊动路边刚醒来的草。";
-        travelText.textContent = `${routeNotes[state.route] || "它把脚步放得很轻，像怕惊动路边刚醒来的草。"} ${packLine}`;
+        const mapLine = mapData[state.mapMark]?.travel || "";
+        travelText.textContent = `${routeNotes[state.route] || "它把脚步放得很轻，像怕惊动路边刚醒来的草。"} ${mapLine} ${packLine}`.trim();
         setLater(() => showScene(state.scene + 1), 7600);
       }
 
       if (name === "map") {
         mapButtons.forEach((button) => button.classList.remove("done"));
+        state.mapMark = "";
         mapNext.disabled = true;
-        mapHint.textContent = "还差三枚标记。";
+        mapHint.textContent = "请选择一枚路标。";
       }
 
       if (name === "note") {
@@ -2267,8 +2388,9 @@
 
       if (name === "mailbox") {
         mailButtons.forEach((button) => button.classList.remove("done"));
+        state.mailPieces = [];
         mailNext.disabled = true;
-        mailHint.textContent = "还差两片。";
+        mailHint.textContent = "请选择两件小东西。";
       }
 
       if (name === "souvenir") {
@@ -2278,13 +2400,24 @@
       if (name === "postcard") {
         postcardTitle.textContent = `${state.route || "旅途中"}：`;
         const item = selectedItems()[0];
-        postcardText.textContent = `${postcardNotes[state.route] || "这里的风很轻。小狐狸说，它把一路看到的好天气都收好了。"} ${item ? "它还在明信片角落画了" + item.name + "。" : ""}`;
+        const map = mapData[state.mapMark];
+        const mails = state.mailPieces.map((key) => mailData[key]).filter(Boolean);
+        postcardArt.className = `postcard-art ${map?.art || ""} ${mails.map((mail) => mail.art).join(" ")}`.trim();
+        postcardText.textContent = [
+          postcardNotes[state.route] || "这里的风很轻。小狐狸说，它把一路看到的好天气都收好了。",
+          map?.postcard || "",
+          ...mails.map((mail) => mail.line),
+          item ? "它还在明信片角落画了" + item.name + "。" : ""
+        ].filter(Boolean).join(" ");
       }
 
       if (name === "return") {
+        const mailLine = state.mailPieces.length
+          ? `信箱里选过的${state.mailPieces.map((key) => mailData[key].name).join("和")}，也被它一起夹进信里。`
+          : "";
         returnText.textContent = state.stamp
-          ? `包袱比出发时轻了一点，信却变得很满。那枚“${state.stamp}”印章，也已经好好盖上了。`
-          : "包袱比出发时轻了一点，信却变得很满。它站在门口，等你接过来。";
+          ? `包袱比出发时轻了一点，信却变得很满。${mailLine} 那枚“${state.stamp}”小印记，也已经好好留在信封角落。`
+          : `包袱比出发时轻了一点，信却变得很满。${mailLine} 它站在门口，等你接过来。`;
       }
 
       if (name === "envelope") {
@@ -2297,8 +2430,10 @@
         chosenRoute.textContent = state.route || "一条温柔的路";
         chosenStamp.textContent = stampNotes[state.stamp] || "信封角落有一枚小狐狸脚印。";
         souvenirSummary.textContent = items.map((item) => item.souvenir[0]).join("、") || "几件安静发光的小物";
+        const mapFinal = mapData[state.mapMark]?.final || "";
+        const mailFinal = state.mailPieces.map((key) => mailData[key]?.final).filter(Boolean).join("");
         branchBlessing.textContent = items.length
-          ? `我想把这些话也放进信里：${items.map((item) => item.blessing).join("")}`
+          ? `我想把这些话也放进信里：${items.map((item) => item.blessing).join("")}${mapFinal}${mailFinal}`
           : "我想把这句话也放进信里：愿你新的一岁，不必一直很厉害，也可以被温柔接住。";
       }
 
@@ -2339,6 +2474,8 @@
       noteButtons.forEach((button) => button.classList.remove("revealed"));
       state.route = "";
       state.stamp = "";
+      state.mapMark = "";
+      state.mailPieces = [];
       state.selectedPacks = [];
       packNext.disabled = true;
       routeNext.disabled = true;
@@ -2348,9 +2485,9 @@
       mailNext.disabled = true;
       souvenirNext.disabled = true;
       packHint.textContent = "还需要选择三样。";
-      mapHint.textContent = "还差三枚标记。";
+      mapHint.textContent = "请选择一枚路标。";
       noteHint.textContent = "还差两张字条。";
-      mailHint.textContent = "还差两片。";
+      mailHint.textContent = "请选择两件小东西。";
       souvenirHint.textContent = "还差三件小物。";
       sealText.innerHTML = '<span class="paw-mark"></span>';
       renderPackedPreview();
@@ -2397,10 +2534,11 @@
 
     mapButtons.forEach((button) => {
       button.addEventListener("click", () => {
+        mapButtons.forEach((item) => item.classList.remove("done"));
         button.classList.add("done");
-        const count = mapButtons.filter((item) => item.classList.contains("done")).length;
-        mapNext.disabled = count !== mapButtons.length;
-        mapHint.textContent = count === mapButtons.length ? "地图拼好了。" : `还差${mapButtons.length - count}枚标记。`;
+        state.mapMark = button.dataset.map;
+        mapNext.disabled = false;
+        mapHint.textContent = `已贴上${mapData[state.mapMark].name}。`;
       });
     });
 
@@ -2419,10 +2557,16 @@
 
     mailButtons.forEach((button) => {
       button.addEventListener("click", () => {
-        button.classList.add("done");
-        const count = mailButtons.filter((item) => item.classList.contains("done")).length;
-        mailNext.disabled = count !== mailButtons.length;
-        mailHint.textContent = count === mailButtons.length ? "信箱整理好了。" : `还差${mailButtons.length - count}片。`;
+        const key = button.dataset.mail;
+        const selected = state.mailPieces.includes(key);
+        if (!selected && state.mailPieces.length >= 2) return;
+        button.classList.toggle("done");
+        state.mailPieces = selected
+          ? state.mailPieces.filter((item) => item !== key)
+          : [...state.mailPieces, key];
+        const count = state.mailPieces.length;
+        mailNext.disabled = count !== 2;
+        mailHint.textContent = count === 2 ? "信箱整理好了。" : `还需要选择${2 - count}件。`;
       });
     });
 
