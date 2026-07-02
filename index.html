@@ -2437,6 +2437,7 @@
             <strong>旅程纪念</strong>
             <span id="journeySummary">小狐狸把这封信送到了。</span>
             <span>它睡在信旁边，今天的路就到这里。</span>
+            <span>晚安，小狐狸也收工了。</span>
           </div>
         </div>
         <div class="buttons">
@@ -2656,7 +2657,7 @@
       empty: "空一会儿，才更像真的等待。",
       return: "它回来了，带着不能提前说的信。",
       envelope: "有些话，要留到最后才打开。",
-      final: "生日快乐，今天的王圣淇请被好好祝福。",
+      final: "祝你快乐，不止生日时光。",
       keepsake: "这趟小旅程被好好收起来了。"
     };
 
@@ -2829,6 +2830,47 @@
       footerText.textContent = footerLines[name] || footerLines.start;
     }
 
+    let audioContext;
+
+    function getAudioContext() {
+      const AudioCtor = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtor) return null;
+      audioContext = audioContext || new AudioCtor();
+      if (audioContext.state === "suspended") {
+        audioContext.resume().catch(() => {});
+      }
+      return audioContext;
+    }
+
+    function playNote(ctx, frequency, start, duration, volume = 0.035, type = "sine") {
+      const oscillator = ctx.createOscillator();
+      const gain = ctx.createGain();
+      oscillator.type = type;
+      oscillator.frequency.setValueAtTime(frequency, start);
+      gain.gain.setValueAtTime(0.0001, start);
+      gain.gain.exponentialRampToValueAtTime(volume, start + 0.018);
+      gain.gain.exponentialRampToValueAtTime(0.0001, start + duration);
+      oscillator.connect(gain);
+      gain.connect(ctx.destination);
+      oscillator.start(start);
+      oscillator.stop(start + duration + 0.02);
+    }
+
+    function playSound(kind = "tap") {
+      const ctx = getAudioContext();
+      if (!ctx) return;
+      const now = ctx.currentTime;
+      const sounds = {
+        tap: [[740, 0, 0.08, 0.022], [980, 0.055, 0.1, 0.018]],
+        paper: [[520, 0, 0.07, 0.018, "triangle"], [680, 0.05, 0.09, 0.016, "triangle"]],
+        open: [[523, 0, 0.18, 0.03], [659, 0.04, 0.2, 0.026], [784, 0.08, 0.22, 0.024]],
+        finish: [[587, 0, 0.16, 0.026], [740, 0.12, 0.18, 0.024], [880, 0.24, 0.25, 0.022]]
+      };
+      (sounds[kind] || sounds.tap).forEach(([frequency, delay, duration, volume, type]) => {
+        playNote(ctx, frequency, now + delay, duration, volume, type);
+      });
+    }
+
     function renderSouvenirs() {
       const items = selectedItems();
       souvenirGrid.innerHTML = items.map((item, index) => `
@@ -2845,6 +2887,7 @@
 
       Array.from(document.querySelectorAll("[data-souvenir]")).forEach((button) => {
         button.addEventListener("click", () => {
+          playSound("paper");
           button.classList.add("revealed");
           const total = document.querySelectorAll("[data-souvenir]").length;
           const count = document.querySelectorAll("[data-souvenir].revealed").length;
@@ -2900,18 +2943,30 @@
     }
 
     nextButtons.forEach((button) => {
-      button.addEventListener("click", () => showScene(state.scene + 1));
+      button.addEventListener("click", () => {
+        playSound("tap");
+        showScene(state.scene + 1);
+      });
     });
 
     restartButtons.forEach((button) => {
-      button.addEventListener("click", resetGame);
+      button.addEventListener("click", () => {
+        playSound("tap");
+        resetGame();
+      });
     });
+
+    function goNextWithSound(kind = "tap") {
+      playSound(kind);
+      showScene(state.scene + 1);
+    }
 
     packButtons.forEach((button) => {
       button.addEventListener("click", () => {
         const key = button.dataset.pack;
         const selected = state.selectedPacks.includes(key);
         if (!selected && state.selectedPacks.length >= 3) return;
+        playSound("tap");
         button.classList.toggle("selected");
         state.selectedPacks = selected
           ? state.selectedPacks.filter((item) => item !== key)
@@ -2924,23 +2979,25 @@
       });
     });
 
-    packNext.addEventListener("click", () => showScene(state.scene + 1));
-    waitNext.addEventListener("click", () => showScene(state.scene + 1));
+    packNext.addEventListener("click", () => goNextWithSound());
+    waitNext.addEventListener("click", () => goNextWithSound());
 
     routeButtons.forEach((button) => {
       button.addEventListener("click", () => {
         routeButtons.forEach((item) => item.classList.remove("selected"));
+        playSound("tap");
         button.classList.add("selected");
         state.route = button.dataset.route;
         routeNext.disabled = false;
       });
     });
 
-    routeNext.addEventListener("click", () => showScene(state.scene + 1));
+    routeNext.addEventListener("click", () => goNextWithSound());
 
     mapButtons.forEach((button) => {
       button.addEventListener("click", () => {
         mapButtons.forEach((item) => item.classList.remove("done"));
+        playSound("paper");
         button.classList.add("done");
         state.mapMark = button.dataset.map;
         mapNext.disabled = false;
@@ -2948,10 +3005,11 @@
       });
     });
 
-    mapNext.addEventListener("click", () => showScene(state.scene + 1));
+    mapNext.addEventListener("click", () => goNextWithSound());
 
     noteButtons.forEach((button) => {
       button.addEventListener("click", () => {
+        playSound("paper");
         button.classList.add("revealed");
         const count = noteButtons.filter((item) => item.classList.contains("revealed")).length;
         noteNext.disabled = count !== noteButtons.length;
@@ -2959,13 +3017,14 @@
       });
     });
 
-    noteNext.addEventListener("click", () => showScene(state.scene + 1));
+    noteNext.addEventListener("click", () => goNextWithSound("paper"));
 
     mailButtons.forEach((button) => {
       button.addEventListener("click", () => {
         const key = button.dataset.mail;
         const selected = state.mailPieces.includes(key);
         if (!selected && state.mailPieces.length >= 2) return;
+        playSound("tap");
         button.classList.toggle("done");
         state.mailPieces = selected
           ? state.mailPieces.filter((item) => item !== key)
@@ -2976,13 +3035,14 @@
       });
     });
 
-    mailNext.addEventListener("click", () => showScene(state.scene + 1));
+    mailNext.addEventListener("click", () => goNextWithSound());
 
-    souvenirNext.addEventListener("click", () => showScene(state.scene + 1));
+    souvenirNext.addEventListener("click", () => goNextWithSound("paper"));
 
     stampButtons.forEach((button) => {
       button.addEventListener("click", () => {
         stampButtons.forEach((item) => item.classList.remove("selected"));
+        playSound("paper");
         button.classList.add("selected");
         state.stamp = button.dataset.stamp;
         sealText.innerHTML = '<span class="paw-mark"></span>';
@@ -2990,8 +3050,8 @@
       });
     });
 
-    stampNext.addEventListener("click", () => showScene(state.scene + 1));
-    emptyNext.addEventListener("click", () => showScene(state.scene + 1));
+    stampNext.addEventListener("click", () => goNextWithSound("paper"));
+    emptyNext.addEventListener("click", () => goNextWithSound());
 
     envelope.addEventListener("click", () => {
       if (envelope.classList.contains("open")) return;
@@ -2999,18 +3059,31 @@
       const left = Math.max(0, 3 - state.envelopeTaps);
       envelopeHint.textContent = left ? `还差${left}下。` : "信封打开了。";
       if (state.envelopeTaps >= 3) {
+        playSound("open");
         envelope.classList.add("open");
         setLater(() => {
           envelopeNext.disabled = false;
         }, 700);
+      } else {
+        playSound("paper");
       }
     });
 
-    envelopeNext.addEventListener("click", () => showScene(state.scene + 1));
-    letterNext.addEventListener("click", revealNextLetterLine);
-    keepLetter.addEventListener("click", () => showScene(state.scene + 1));
+    envelopeNext.addEventListener("click", () => {
+      playSound("paper");
+      showScene(state.scene + 1);
+    });
+    letterNext.addEventListener("click", () => {
+      playSound("paper");
+      revealNextLetterLine();
+    });
+    keepLetter.addEventListener("click", () => {
+      playSound("finish");
+      showScene(state.scene + 1);
+    });
 
     slowAgain.addEventListener("click", () => {
+      playSound("tap");
       showScene(scenes.findIndex((scene) => scene.dataset.scene === "envelope"));
     });
   </script>
