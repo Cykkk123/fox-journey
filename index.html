@@ -2413,13 +2413,10 @@
         <article class="letter">
           <p class="letter-step">亲爱的王圣淇：</p>
           <p class="letter-step">生日快乐。</p>
-          <p class="letter-step">小狐狸走过了<span id="chosenRoute">一条小路</span>，带回了<span id="souvenirSummary">几件小东西</span>。路上有风，有树影，也有一些适合慢慢说的话。</p>
-          <p class="letter-step" id="branchBlessing">我想把这句话也放进信里：新的一岁，别把日子过得太紧。好好吃饭，好好睡觉，也给自己留一点发呆的空白。</p>
-          <p class="letter-step">你爱旅行，以后还会去很多地方。新的城市，新的海，新的山路。走累了，就坐下来喝杯咖啡，看一会儿天。</p>
-          <p class="letter-step">你也爱跑步。跑得快时有风，慢下来也有风。路在脚下，人往前去，这就很好。</p>
-          <p class="letter-step">Happy birthday, happy anniversary. 今天还是想认真说一句：生日快乐。</p>
-          <p class="letter-step"><strong>谢谢你一直成为你自己。祝你快乐，不止生日这一天。</strong></p>
-          <p class="letter-step signature" id="chosenStamp">信封角落有一枚小狐狸脚印。</p>
+          <p class="letter-step">这个小游戏做了很久，改来改去，最后还是想把它做成一趟小旅行。<br>因为想到你，好像也很适合“出发”这个词。<br>你常常去新的地方，喝一杯咖啡，跑一段路，去体验大大小小新鲜的事物。</p>
+          <p class="letter-step">其实未来每一天都是新的旅程。<br>也许会在某个晚上从图书馆出来，看见很亮的街灯；<br>也许只是随便走进一家店，喝到一杯还不错的咖啡。<br>虽然这些事情现在还没有发生，但已经让人觉得高兴。</p>
+          <p class="letter-step">最后，祝你不管去到哪里，也还是做你自己。<br>祝你有很多好玩的事，很多漂亮的傍晚，很多走着走着就记住的路。</p>
+          <p class="letter-step"><strong>Happy birthday, happy anniversary.<br>愿你生日快乐。<br>更愿你快乐，不止生日时光。</strong></p>
         </article>
         <div class="buttons">
           <button class="primary" type="button" id="letterNext">继续读</button>
@@ -2495,10 +2492,6 @@
     const envelopeHint = document.getElementById("envelopeHint");
     const envelopeNext = document.getElementById("envelopeNext");
     const sealText = document.getElementById("sealText");
-    const chosenRoute = document.getElementById("chosenRoute");
-    const chosenStamp = document.getElementById("chosenStamp");
-    const souvenirSummary = document.getElementById("souvenirSummary");
-    const branchBlessing = document.getElementById("branchBlessing");
     const letterSteps = Array.from(document.querySelectorAll(".letter-step"));
     const letterNext = document.getElementById("letterNext");
     const keepLetter = document.getElementById("keepLetter");
@@ -2804,15 +2797,6 @@
       }
 
       if (name === "final") {
-        const items = selectedItems();
-        chosenRoute.textContent = state.route || "一条小路";
-        chosenStamp.textContent = stampNotes[state.stamp] || "信封角落有一枚小狐狸脚印。";
-        souvenirSummary.textContent = items.map((item) => item.souvenir[0]).join("、") || "几件安静发光的小物";
-        const mapFinal = mapData[state.mapMark]?.final || "";
-        const mailFinal = state.mailPieces.map((key) => mailData[key]?.final).filter(Boolean).join("");
-        branchBlessing.textContent = items.length
-          ? `路上也留下几句话：${items.map((item) => item.blessing).join("")}${mapFinal}${mailFinal}`
-          : "路上也留下了一句话：新的一岁，别把日子过得太紧。好好吃饭，好好睡觉，也给自己留一点发呆的空白。";
         state.letterIndex = 0;
         letterSteps.forEach((step) => step.classList.remove("revealed"));
         letterNext.disabled = false;
